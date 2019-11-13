@@ -1,0 +1,23 @@
+{
+  "name": "demo1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --watchAll --verbose"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/preset-env": "^7.7.1",
+    "@babel/preset-typescript": "^7.7.2",
+    "@types/jest": "^24.0.22",
+    "@types/node": "^12.12.6",
+    "jest": "^24.9.0",
+    "tmp": "^0.1.0",
+    "ts-jest": "^24.1.0",
+    "tslint-config-airbnb": "^5.11.2",
+    "typescript": "^3.7.2"
+  }
+}

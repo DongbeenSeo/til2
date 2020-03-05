@@ -1,18 +1,19 @@
-import React, { useCallback } from 'react';
-import { Form, Input, Button } from 'antd';
-import Link from 'next/link';
-import { useInput } from '../pages/signup';
+import React, { useCallback } from "react";
+import { Form, Input, Button } from "antd";
+import Link from "next/link";
+import { useInput } from "../pages/signup";
+import { useDispatch } from "react-redux";
+import { loginAction } from "../reducers/user";
 
 const LoginForm = () => {
-  const [id, onChangeId] = useInput('');
-  const [password, onChangePassword] = useInput('');
+  const [id, onChangeId] = useInput("");
+  const [password, onChangePassword] = useInput("");
+  const dispatch = useDispatch();
+
   const onSubmit = useCallback(
     e => {
       e.preventDefault();
-      console.log({
-        id,
-        password,
-      });
+      dispatch(loginAction);
     },
     [id, password]
   );
@@ -35,7 +36,7 @@ const LoginForm = () => {
             onChange={onChangePassword}
           />
         </div>
-        <div>
+        <div style={{ marginTop: 10 }}>
           <Button type="primary" htmlType="submit" loading={false}>
             로그인
           </Button>

@@ -1,10 +1,16 @@
 import React from "react";
 import Head from "next/head";
+import { Provider } from "react-redux";
+import { createStore, compose, applyMiddleware } from "redux";
+import withRedux from "next-redux-wrapper";
+
 import AppLayout from "../components/AppLayout";
 
-const NodeBird = ({ Component }) => {
+import reducer from "../reducers";
+
+const NodeBird = ({ Component, store }) => {
   return (
-    <div>
+    <Provider store={store}>
       <Head>
         <title>NodeBird</title>
         <link
@@ -16,8 +22,20 @@ const NodeBird = ({ Component }) => {
       <AppLayout>
         <Component />
       </AppLayout>
-    </div>
+    </Provider>
   );
 };
 
-export default NodeBird;
+export default withRedux((initState, options) => {
+  const middlewares = [];
+  const composeEnhancers =
+    (typeof window !== "undefined" &&
+      window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
+    compose;
+  const store = createStore(
+    reducer,
+    composeEnhancers(applyMiddleware(...middlewares))
+  );
+
+  return store;
+})(NodeBird);

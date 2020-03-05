@@ -27,4 +27,22 @@ action: state를 바꾸는 행동
 dispatch: action을 실행
 reducer: action의 결과로 state를 어떻게 바꿀지 정의
 
-ex) 로그인 액션(action) -> 로그인 액션 dispatch(dispatch) -> 로그인액션 dispatch시 isLogin state를 변경(reducer) ->
+ex) 로그인 액션(action) -> 로그인 액션 dispatch(dispatch) -> 로그인액션 dispatch시 isLogin state를 변경(reducer)
+
+reducer의 return값은 항상 불변성을 유지, react에서는 이전 state와 현재 state의 차이를 판단하는데 객체는 참조가 항상 같기 때문에,
+새로운 객체를 생성하지 않으면 redux의 state가 변경되었는지 알 수 없다.
+
+react Class Component -> connect
+react Function Component -> hooks(useDispatch, useEffect)
+
+### redux devtools error
+
+ReferenceError: window is not defined 발생시
+
+```js
++ const composeEnhancers = typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
++ const store = createStore(reducer, /* preloadedState, */ composeEnhancers(
+- const store = createStore(reducer, /* preloadedState, */ compose(
+    applyMiddleware(...middleware)
+  ));
+```

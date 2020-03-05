@@ -3,16 +3,10 @@ import { Menu, Input, Button, Row, Col, Card, Avatar } from "antd";
 import Link from "next/link";
 import LoginForm from "./LoginForm";
 import UserProfile from "./UserProfile";
-
-const dummy = {
-  nickname: "dongbeen",
-  post: 0,
-  following: 0,
-  follower: 0,
-  isLogin: true
-};
+import { useSelector } from "react-redux";
 
 const AppLayout = ({ children }) => {
+  const { user } = useSelector(state => state.user);
   return (
     <div>
       <Menu mode="horizontal">
@@ -30,14 +24,14 @@ const AppLayout = ({ children }) => {
           <Input.Search enterButton style={{ verticalAlign: "middle" }} />
         </Menu.Item>
       </Menu>
-      <Button>
+      {/* <Button>
         <Link href="/signup">
           <a>회원가입</a>
         </Link>
-      </Button>
+      </Button> */}
       <Row gutter={8}>
         <Col xs={24} md={6}>
-          {dummy.isLogin ? <UserProfile /> : <LoginForm />}
+          {user.isLogin ? <UserProfile /> : <LoginForm />}
         </Col>
         <Col xs={24} md={6}>
           {children}

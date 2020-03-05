@@ -1,5 +1,6 @@
 import React from "react";
 import { Card, Icon, Avatar } from "antd";
+import { useSelector } from "react-redux";
 
 const dummy = {
   isLogin: true,
@@ -41,8 +42,8 @@ const PostCard = ({ post }) => {
           <Icon type="ellipsis" key="ellipsis" />
         ]}>
         <Card.Meta
-          avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
-          title={post.User.nickname}
+          avatar={<Avatar>{post.user.nickname[0]}</Avatar>}
+          title={post.user.nickname}
           description={post.content}
         />
       </Card>

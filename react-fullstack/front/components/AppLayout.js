@@ -1,16 +1,15 @@
-import React from 'react';
-import { Menu, Input, Button, Row, Col, Card, Avatar } from 'antd';
-import Link from 'next/link';
-import propTypes from 'prop-types';
-import LoginForm from './LoginForm';
-import UserProfile from './UserProfile';
+import React from "react";
+import { Menu, Input, Button, Row, Col, Card, Avatar } from "antd";
+import Link from "next/link";
+import LoginForm from "./LoginForm";
+import UserProfile from "./UserProfile";
 
 const dummy = {
-  nickname: 'dongbeen',
+  nickname: "dongbeen",
   post: 0,
   following: 0,
   follower: 0,
-  isLogin: false,
+  isLogin: true
 };
 
 const AppLayout = ({ children }) => {
@@ -28,7 +27,7 @@ const AppLayout = ({ children }) => {
           </Link>
         </Menu.Item>
         <Menu.Item key="mail">
-          <Input.Search enterButton style={{ verticalAlign: 'middle' }} />
+          <Input.Search enterButton style={{ verticalAlign: "middle" }} />
         </Menu.Item>
       </Menu>
       <Button>
@@ -40,16 +39,12 @@ const AppLayout = ({ children }) => {
         <Col xs={24} md={6}>
           {dummy.isLogin ? <UserProfile /> : <LoginForm />}
         </Col>
-        <Col xs={24} md={12}>
+        <Col xs={24} md={6}>
           {children}
         </Col>
       </Row>
     </div>
   );
-};
-
-AppLayout.propTypes = {
-  children: propTypes.node,
 };
 
 export default AppLayout;

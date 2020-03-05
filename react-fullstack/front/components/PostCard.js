@@ -1,39 +1,49 @@
-import React from 'react';
-import { Card, Icon, Avatar } from 'antd';
+import React from "react";
+import { Card, Icon, Avatar } from "antd";
 
 const dummy = {
   isLogin: true,
   images: [],
   posts: [
     {
-      createdAt: '2020-03-05',
+      createdAt: "2020-03-05",
       User: {
         id: 1,
-        nickname: 'dongbeen',
+        nickname: "dongbeen"
       },
-      content: 'first content',
+      content: "first content",
       img:
-        'http://rilly.co.kr/web/product/big/201906/e1ff138fe71a08399d094840fd39a686.jpg',
-    },
-  ],
+        "http://rilly.co.kr/web/product/big/201906/e1ff138fe71a08399d094840fd39a686.jpg"
+    }
+  ]
 };
 
-const PostCard = () => {
+const PostCard = ({ post }) => {
   return (
     <div>
       <Card
-        key={p.createdAt}
-        cover={p.img && <img alt="ex" src={p.img} />}
+        key={post.createdAt}
+        cover={
+          post.img && (
+            <div
+              style={{
+                maxWidth: "300px",
+                margin: "0 auto"
+              }}>
+              <img alt="ex" src={post.img} style={{ maxWidth: "100%" }} />
+            </div>
+          )
+        }
         actions={[
           <Icon type="retweet" key="retweet" />,
           <Icon type="heart" key="heart" />,
           <Icon type="message" key="message" />,
-          <Icon type="ellipsis" key="ellipsis" />,
+          <Icon type="ellipsis" key="ellipsis" />
         ]}>
         <Card.Meta
-          avatar={<Avatar>{p.User.nickname[0]}</Avatar>}
-          title={p.User.nickname}
-          description={p.content}
+          avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
+          title={post.User.nickname}
+          description={post.content}
         />
       </Card>
     </div>

@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
-import PostForm from "../components/PostForm";
-import PostCard from "../components/PostCard";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { LOG_IN, LOG_OUT, loginAction, logoutAction } from "../reducers/user";
+import React, { useEffect } from 'react';
+import PostForm from '../components/PostForm';
+import PostCard from '../components/PostCard';
+import { connect, useDispatch, useSelector } from 'react-redux';
+import { LOG_IN, LOG_OUT, loginAction, logoutAction } from '../reducers/user';
 
 // { dispatch, isLogin, user, login, logout }
 const Home = () => {
@@ -13,7 +13,10 @@ const Home = () => {
   //   // });
   // }, []);
   //input: dependensy parameter에 아무것도 넣지 않으면 componentDidMount와 같다
-  const { isLogin, user } = useSelector(state => state.user);
+  const { isLogin, user } = useSelector(state => {
+    console.log(`state:${JSON.stringify(state, null, 4)}`);
+    return state.user;
+  });
   const { posts } = useSelector(state => state.posts);
 
   // hooks없이 store와 connect하는 code
@@ -22,10 +25,10 @@ const Home = () => {
     <div style={{ padding: 10 }}>
       {
         <div>
-          {user.isLogin ? `Login Success ${user.nickname}!` : "please Log In"}
+          {isLogin ? `Login Success ${user.nickname}!` : 'please Log In'}
         </div>
       }
-      {user.isLogin && <PostForm />}
+      {isLogin && <PostForm />}
       {posts && posts.map((p, index) => <PostCard key={index} post={p} />)}
     </div>
   );

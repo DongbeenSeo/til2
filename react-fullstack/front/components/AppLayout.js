@@ -1,12 +1,12 @@
-import React from "react";
-import { Menu, Input, Button, Row, Col, Card, Avatar } from "antd";
-import Link from "next/link";
-import LoginForm from "./LoginForm";
-import UserProfile from "./UserProfile";
-import { useSelector } from "react-redux";
+import React from 'react';
+import { Menu, Input, Button, Row, Col, Card, Avatar } from 'antd';
+import Link from 'next/link';
+import LoginForm from './LoginForm';
+import UserProfile from './UserProfile';
+import { useSelector } from 'react-redux';
 
 const AppLayout = ({ children }) => {
-  const { user } = useSelector(state => state.user);
+  const { user, isLogin } = useSelector(state => state.user);
   return (
     <div>
       <Menu mode="horizontal">
@@ -21,7 +21,7 @@ const AppLayout = ({ children }) => {
           </Link>
         </Menu.Item>
         <Menu.Item key="mail">
-          <Input.Search enterButton style={{ verticalAlign: "middle" }} />
+          <Input.Search enterButton style={{ verticalAlign: 'middle' }} />
         </Menu.Item>
       </Menu>
       {/* <Button>
@@ -31,9 +31,9 @@ const AppLayout = ({ children }) => {
       </Button> */}
       <Row gutter={8}>
         <Col xs={24} md={6}>
-          {user.isLogin ? <UserProfile /> : <LoginForm />}
+          {isLogin ? <UserProfile /> : <LoginForm />}
         </Col>
-        <Col xs={24} md={6}>
+        <Col xs={24} md={8}>
           {children}
         </Col>
       </Row>

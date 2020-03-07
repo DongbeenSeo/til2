@@ -1,5 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Form, Input, Checkbox, Button } from 'antd';
+import { useDispatch } from 'react-redux';
+import { signupAction } from '../reducers/user';
 
 export const useInput = (initValue = null) => {
   const [value, setter] = useState(initValue);
@@ -25,13 +27,23 @@ const signup = () => {
   const [nick, onChangeNickname] = useInput('');
   const [password, onChangePassword] = useInput('');
 
+  const dispatch = useDispatch();
+
   const onSubmit = useCallback(
     e => {
       e.preventDefault();
       //webpack에 console.log없애는 설정이 있음
-      if (!term) setTermError(true);
-      else {
-        if (!passwordError && !termError)
+      if (!term) {
+        setTermError(true);
+      } else {
+        if (!passwordError && !termError) {
+          dispatch(
+            signupAction({
+              id,
+              password,
+              nickname: nick,
+            })
+          );
           console.log({
             id,
             nick,
@@ -39,6 +51,7 @@ const signup = () => {
             passwordCheck,
             term,
           });
+        }
       }
     },
     [password, passwordCheck, term]

@@ -1,23 +1,6 @@
-import React from "react";
-import { Card, Icon, Avatar } from "antd";
-import { useSelector } from "react-redux";
-
-const dummy = {
-  isLogin: true,
-  images: [],
-  posts: [
-    {
-      createdAt: "2020-03-05",
-      User: {
-        id: 1,
-        nickname: "dongbeen"
-      },
-      content: "first content",
-      img:
-        "http://rilly.co.kr/web/product/big/201906/e1ff138fe71a08399d094840fd39a686.jpg"
-    }
-  ]
-};
+import React from 'react';
+import { Card, Icon, Avatar } from 'antd';
+import { useSelector } from 'react-redux';
 
 const PostCard = ({ post }) => {
   return (
@@ -28,10 +11,10 @@ const PostCard = ({ post }) => {
           post.img && (
             <div
               style={{
-                maxWidth: "300px",
-                margin: "0 auto"
+                maxWidth: '300px',
+                margin: '0 auto',
               }}>
-              <img alt="ex" src={post.img} style={{ maxWidth: "100%" }} />
+              <img alt="ex" src={post.img} style={{ maxWidth: '100%' }} />
             </div>
           )
         }
@@ -39,11 +22,16 @@ const PostCard = ({ post }) => {
           <Icon type="retweet" key="retweet" />,
           <Icon type="heart" key="heart" />,
           <Icon type="message" key="message" />,
-          <Icon type="ellipsis" key="ellipsis" />
+          <Icon type="ellipsis" key="ellipsis" />,
         ]}>
         <Card.Meta
           avatar={<Avatar>{post.user.nickname[0]}</Avatar>}
-          title={post.user.nickname}
+          title={
+            <span>
+              {post.user.nickname}&nbsp;
+              <span style={{ fontSize: 12 }}>{post.createdAt}</span>
+            </span>
+          }
           description={post.content}
         />
       </Card>

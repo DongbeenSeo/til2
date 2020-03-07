@@ -13,11 +13,14 @@ const Home = () => {
   //   // });
   // }, []);
   //input: dependensy parameter에 아무것도 넣지 않으면 componentDidMount와 같다
-  const { isLogin, user } = useSelector(state => {
-    console.log(`state:${JSON.stringify(state, null, 4)}`);
-    return state.user;
-  });
+  const { isLogin, user } = useSelector(state => state.user);
   const { posts } = useSelector(state => state.posts);
+
+  useEffect(() => {
+    dispatch({
+      type: 'HELLO_SAGA',
+    });
+  }, []);
 
   // hooks없이 store와 connect하는 code
   // const { user, isLogin } = props;

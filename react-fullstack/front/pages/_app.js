@@ -1,12 +1,14 @@
-import React from "react";
-import Head from "next/head";
-import { Provider } from "react-redux";
-import { createStore, compose, applyMiddleware } from "redux";
-import withRedux from "next-redux-wrapper";
+import React from 'react';
+import Head from 'next/head';
+import { Provider } from 'react-redux';
+import { createStore, compose, applyMiddleware } from 'redux';
+import withRedux from 'next-redux-wrapper';
+import createSagaMiddleware from 'redux-saga';
 
-import AppLayout from "../components/AppLayout";
+import AppLayout from '../components/AppLayout';
 
-import reducer from "../reducers";
+import reducer from '../reducers';
+import rootSaga from '../sagas';
 
 const NodeBird = ({ Component, store }) => {
   return (
@@ -26,16 +28,30 @@ const NodeBird = ({ Component, store }) => {
   );
 };
 
-export default withRedux((initState, options) => {
-  const middlewares = [];
-  const composeEnhancers =
-    (typeof window !== "undefined" &&
-      window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
-    compose;
-  const store = createStore(
-    reducer,
-    composeEnhancers(applyMiddleware(...middlewares))
-  );
+const configureStore = (initState, options) => {
+  const sagaMiddleware = createSagaMiddleware();
+  const middlewares = [sagaMiddleware];
+
+  // const composeEnhancers =
+  //   (typeof window !== 'undefined' &&
+  //     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
+  //   compose;
+
+  const enhancer =
+    process.env.NODE_ENV === 'production'
+      ? compose(applyMiddleware(...middlewares))
+      : compose(
+          applyMiddleware(...middlewares),
+          !options.isServer &&
+            typeof window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined'
+            ? window.__REDUX_DEVTOOLS_EXTENSION__()
+            : f => f
+        );
+
+  const store = createStore(reducer, initState, enhancer);
+  sagaMiddleware.run(rootSaga);
 
   return store;
-})(NodeBird);
+};
+
+export default withRedux(configureStore)(NodeBird);

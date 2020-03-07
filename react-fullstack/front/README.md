@@ -35,7 +35,7 @@ reducer의 return값은 항상 불변성을 유지, react에서는 이전 state�
 react Class Component -> connect
 react Function Component -> hooks(useDispatch, useEffect)
 
-### redux devtools error
+### 1. redux devtools error
 
 ReferenceError: window is not defined 발생시
 
@@ -45,4 +45,22 @@ ReferenceError: window is not defined 발생시
 - const store = createStore(reducer, /* preloadedState, */ compose(
     applyMiddleware(...middleware)
   ));
+```
+
+### 2. redux saga
+
+redux에서 action을 dispatch하면 동기식으로 작동하기 때문에
+
+- 서버쪽에 data가 전달되고,
+- 서버가 로그인 성공이라는 response를 보내주고
+- response를 받아서 로그인
+
+기능을 비동기식으로 실행하기 위해 redux-saga middleware를 사용
+
+```js
+function* generator(){
+  ...
+}
+
+// 무한의 개념 or 비동기 처리를 하는 데에 자주 사용하는 함수
 ```

@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import PostForm from '../components/PostForm';
-import PostCard from '../components/PostCard';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import { LOG_IN, LOG_OUT, loginAction, logoutAction } from '../reducers/user';
+import React, { useEffect } from "react";
+import PostForm from "../components/PostForm";
+import PostCard from "../components/PostCard";
+import { connect, useDispatch, useSelector } from "react-redux";
+import { LOG_IN, LOG_OUT, loginAction, logoutAction } from "../reducers/user";
 
 // { dispatch, isLogin, user, login, logout }
 const Home = () => {
@@ -17,9 +17,9 @@ const Home = () => {
   const { posts } = useSelector(state => state.posts);
 
   useEffect(() => {
-    dispatch({
-      type: 'HELLO_SAGA',
-    });
+    // dispatch({
+    //   type: "HELLO_SAGA"
+    // });
   }, []);
 
   // hooks없이 store와 connect하는 code
@@ -28,7 +28,7 @@ const Home = () => {
     <div style={{ padding: 10 }}>
       {
         <div>
-          {isLogin ? `Login Success ${user.nickname}!` : 'please Log In'}
+          {isLogin ? `Login Success ${user.nickname}!` : "please Log In"}
         </div>
       }
       {isLogin && <PostForm />}

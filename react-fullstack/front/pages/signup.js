@@ -1,7 +1,9 @@
-import React, { useState, useCallback } from 'react';
-import { Form, Input, Checkbox, Button } from 'antd';
-import { useDispatch } from 'react-redux';
-import { signupAction } from '../reducers/user';
+import React, { useState, useCallback, useEffect } from "react";
+import { Form, Input, Checkbox, Button } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import Router from "next/router";
+
+import { SIGN_UP_REQUEST } from "../reducers/user";
 
 export const useInput = (initValue = null) => {
   const [value, setter] = useState(initValue);
@@ -15,7 +17,7 @@ const signup = () => {
   // const [id, setId] = useState('');
   // const [nick, setNick] = useState('');
   // const [password, setPassword] = useState('');
-  const [passwordCheck, setPasswordCheck] = useState('');
+  const [passwordCheck, setPasswordCheck] = useState("");
   const [term, setTerm] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [termError, setTermError] = useState(false);
@@ -23,11 +25,20 @@ const signup = () => {
 
   //custom hook
 
-  const [id, onChangeId] = useInput('');
-  const [nick, onChangeNickname] = useInput('');
-  const [password, onChangePassword] = useInput('');
+  const [id, onChangeId] = useInput("");
+  const [nick, onChangeNickname] = useInput("");
+  const [password, onChangePassword] = useInput("");
 
   const dispatch = useDispatch();
+
+  const { isSigningUp, me } = useSelector(state => state.user);
+
+  useEffect(() => {
+    if (me) {
+      alert("메인으로 이동");
+      Router.push("/");
+    }
+  }, [me && me.id]);
 
   const onSubmit = useCallback(
     e => {
@@ -37,19 +48,20 @@ const signup = () => {
         setTermError(true);
       } else {
         if (!passwordError && !termError) {
-          dispatch(
-            signupAction({
+          dispatch({
+            type: SIGN_UP_REQUEST,
+            data: {
               id,
               password,
-              nickname: nick,
-            })
-          );
+              nick
+            }
+          });
           console.log({
             id,
             nick,
             password,
             passwordCheck,
-            term,
+            term
           });
         }
       }
@@ -72,7 +84,7 @@ const signup = () => {
 
   const onChangePasswordCheck = useCallback(
     e => {
-      if (password === '') {
+      if (password === "") {
         setPasswordRequired(true);
       } else {
         setPasswordError(e.target.value !== password);
@@ -88,69 +100,74 @@ const signup = () => {
   }, []);
 
   return (
-    <Form onSubmit={onSubmit}>
-      <div>
-        <label htmlFor="user-id">아이디</label>
-        <br />
-        <Input
-          name="user-id"
-          required={true}
-          value={id}
-          onChange={onChangeId}
-        />
-      </div>
-      <div>
-        <label htmlFor="nickname">닉네임</label>
-        <br />
-        <Input
-          name="nickname"
-          required={true}
-          value={nick}
-          onChange={onChangeNickname}
-        />
-      </div>
-      <div>
-        <label htmlFor="user-password">비밀번호</label>
-        <br />
-        <Input
-          type="password"
-          name="user-password"
-          required={true}
-          value={password}
-          onChange={onChangePassword}
-        />
-      </div>
-      <div>
-        <label htmlFor="user-passwordCheck">비밀번호체크</label>
-        <br />
-        <Input
-          type="password"
-          name="user-passwordCheck"
-          required={true}
-          value={passwordCheck}
-          onChange={onChangePasswordCheck}
-        />
-      </div>{' '}
-      {passwordError && (
-        <div style={{ color: 'red' }}>비밀번호가 일치하지 않습니다.</div>
-      )}
-      {passwordRequired && (
-        <div style={{ color: 'red' }}>비밀번호를 먼저 입력해주세요.</div>
-      )}
-      <div>
-        <Checkbox name="user-term" checked={term} onChange={onChangeTerm}>
-          약관동의
-        </Checkbox>
-        {termError && (
-          <div style={{ marginTop: 10, color: 'red' }}>약관에 동의해주세요</div>
+    <div style={{ padding: 10 }}>
+      <div style={{ fontSize: 18, fontWeight: "bold" }}>회원가입</div>
+      <Form onSubmit={onSubmit}>
+        <div>
+          <label htmlFor="user-id">아이디</label>
+          <br />
+          <Input
+            name="user-id"
+            required={true}
+            value={id}
+            onChange={onChangeId}
+          />
+        </div>
+        <div>
+          <label htmlFor="nickname">닉네임</label>
+          <br />
+          <Input
+            name="nickname"
+            required={true}
+            value={nick}
+            onChange={onChangeNickname}
+          />
+        </div>
+        <div>
+          <label htmlFor="user-password">비밀번호</label>
+          <br />
+          <Input
+            type="password"
+            name="user-password"
+            required={true}
+            value={password}
+            onChange={onChangePassword}
+          />
+        </div>
+        <div>
+          <label htmlFor="user-passwordCheck">비밀번호체크</label>
+          <br />
+          <Input
+            type="password"
+            name="user-passwordCheck"
+            required={true}
+            value={passwordCheck}
+            onChange={onChangePasswordCheck}
+          />
+        </div>{" "}
+        {passwordError && (
+          <div style={{ color: "red" }}>비밀번호가 일치하지 않습니다.</div>
         )}
-      </div>
-      <div>
-        <Button type="primary" htmlType="submit">
-          가입하기
-        </Button>
-      </div>
-    </Form>
+        {passwordRequired && (
+          <div style={{ color: "red" }}>비밀번호를 먼저 입력해주세요.</div>
+        )}
+        <div>
+          <Checkbox name="user-term" checked={term} onChange={onChangeTerm}>
+            약관동의
+          </Checkbox>
+          {termError && (
+            <div style={{ marginTop: 10, color: "red" }}>
+              약관에 동의해주세요
+            </div>
+          )}
+        </div>
+        <div>
+          <Button type="primary" htmlType="submit">
+            가입하기
+          </Button>
+        </div>
+      </Form>
+    </div>
   );
 };
 

@@ -1,7 +1,20 @@
-import { all, fork, takeLatest, call, put, take } from "redux-saga/effects";
-import { LOG_IN, LOG_IN_SUCCESS, LOG_IN_FAIL } from "../reducers/user";
-
-const HELLO_SAGA = "HELLO_SAGA";
+import {
+  all,
+  fork,
+  takeLatest,
+  call,
+  put,
+  takeEvery,
+  delay
+} from "redux-saga/effects";
+import {
+  LOG_IN_REQUEST,
+  LOG_IN_SUCCESS,
+  LOG_IN_FAILURE,
+  SIGN_UP_FAILURE,
+  SIGN_UP_REQUEST,
+  SIGN_UP_SUCCESS
+} from "../reducers/user";
 
 function loginAPI() {
   //서버에 api 요청을 보내는 부분
@@ -9,8 +22,9 @@ function loginAPI() {
 
 function* login() {
   try {
-    yield call(loginAPI);
+    // yield call(loginAPI);
     // login api 요청
+    yield delay(2000);
     yield put({
       type: LOG_IN_SUCCESS
     });
@@ -18,7 +32,7 @@ function* login() {
   } catch (err) {
     console.error(err);
     yield put({
-      type: LOG_IN_FAIL
+      type: LOG_IN_FAILURE
     });
     // 로그인 실패시
   }
@@ -29,12 +43,13 @@ function* watchLogin() {
    * saga에서 login action이 실행되는지 wait
    */
   // yield takeLatest(LOG_IN, login);
-  while (true) {
-    yield take(LOG_IN);
-    yield put({
-      type: LOG_IN_SUCCESS
-    });
-  }
+  // while (true) {
+  //   yield take(LOG_IN);
+  //   yield put({
+  //     type: LOG_IN_SUCCESS
+  //   });
+  // }
+  yield takeEvery(LOG_IN_REQUEST, login);
   // put: dispatch역할, redux saga의 dispatch
   // yield
 }
@@ -50,8 +65,30 @@ function* watchLogin() {
 //   }
 // }
 
-function* watchSignUp() {}
+function signUpAPI() {
+  return axios.post("/signup");
+}
+
+function* signUp() {
+  try {
+    yield delay(2000);
+    throw new Error("error");
+    yield put({
+      type: SIGN_UP_SUCCESS
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: SIGN_UP_FAILURE,
+      error: err
+    });
+  }
+}
+
+function* watchSignUp() {
+  yield takeEvery(SIGN_UP_REQUEST, signUp);
+}
 
 export default function* userSaga() {
-  yield all([watchLogin()]);
+  yield all([fork(watchLogin), fork(watchSignUp)]);
 }

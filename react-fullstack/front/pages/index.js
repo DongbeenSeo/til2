@@ -13,8 +13,8 @@ const Home = () => {
   //   // });
   // }, []);
   //input: dependensy parameter에 아무것도 넣지 않으면 componentDidMount와 같다
-  const { isLogin, user } = useSelector(state => state.user);
-  const { posts } = useSelector(state => state.posts);
+  const { isLoggedIn, user } = useSelector(state => state.user);
+  const { mainPosts } = useSelector(state => state.posts);
 
   useEffect(() => {
     // dispatch({
@@ -23,16 +23,13 @@ const Home = () => {
   }, []);
 
   // hooks없이 store와 connect하는 code
-  // const { user, isLogin } = props;
+  // const { user, isLoggedIn } = props;
   return (
     <div style={{ padding: 10 }}>
-      {
-        <div>
-          {isLogin ? `Login Success ${user.nickname}!` : "please Log In"}
-        </div>
-      }
-      {isLogin && <PostForm />}
-      {posts && posts.map((p, index) => <PostCard key={index} post={p} />)}
+      {isLoggedIn && <PostForm />}
+      {mainPosts.map((p, index) => (
+        <PostCard key={index} post={p} />
+      ))}
     </div>
   );
 };

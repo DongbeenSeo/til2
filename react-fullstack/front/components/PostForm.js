@@ -1,30 +1,69 @@
-import React from 'react';
-import { Form, Input, Button } from 'antd';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState, useCallback } from "react";
+import { Form, Input, Button } from "antd";
+import { useSelector, useDispatch } from "react-redux";
+import { ADD_POST_REQUEST } from "../reducers/post";
 
 const PostForm = () => {
-  const { user } = useSelector(state => state.user);
+  const dispatch = useDispatch();
+  const [text, setText] = useState("");
+
+  const { imagePaths, isAddingPost, postAdded } = useSelector(
+    state => state.posts
+  );
+
+  useEffect(() => {
+    if (postAdded) {
+      setText("");
+    }
+  }, [postAdded]);
+
+  const onSubmitForm = useCallback(e => {
+    e.preventDefault();
+    dispatch({
+      type: ADD_POST_REQUEST,
+      data: {
+        text
+      }
+    });
+  }, []);
+
+  const onChangeText = useCallback(e => {
+    setText(e.target.value);
+  }, []);
+
   return (
     <div>
-      <Form encType="multipart/form-data" style={{ margin: '10px 0 20px' }}>
-        <Input.TextArea maxLength={140} placeholder="please input content" />
+      <Form
+        encType="multipart/form-data"
+        style={{ marginBottom: 20 }}
+        onSubmit={onSubmitForm}>
+        <Input.TextArea
+          maxLength={140}
+          placeholder="please input content"
+          value={text}
+          onChange={onChangeText}
+        />
         <div>
           <Input type="file" multiple hidden />
           <Button>이미지 업로드</Button>
-          <Button type="primary" style={{ float: 'right' }} htmlType="submit">
+          <Button
+            type="primary"
+            style={{ float: "right" }}
+            htmlType="submit"
+            loading={isAddingPost}>
             생성
           </Button>
         </div>
         <div>
-          {user.images.map((value, index) => {
+          {imagePaths.map((value, index) => {
             return (
               <div
                 key={index}
                 style={{
-                  maxWidth: '300px',
-                  margin: '0 auto',
+                  maxWidth: "300px",
+                  margin: "0 auto"
                 }}>
-                <img src={value} alt={value} style={{ maxWidth: '100%' }} />
+                <img src={value} alt={value} style={{ maxWidth: "100%" }} />
                 <Button>제거</Button>
               </div>
             );

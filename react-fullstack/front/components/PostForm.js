@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { Form, Input, Button } from "antd";
-import { useSelector, useDispatch } from "react-redux";
-import { ADD_POST_REQUEST } from "../reducers/post";
+import React, { useEffect, useState, useCallback } from 'react';
+import { Form, Input, Button } from 'antd';
+import { useSelector, useDispatch } from 'react-redux';
+import { ADD_POST_REQUEST } from '../reducers/post';
 
 const PostForm = () => {
   const dispatch = useDispatch();
-  const [text, setText] = useState("");
+  const [text, setText] = useState('');
 
   const { imagePaths, isAddingPost, postAdded } = useSelector(
     state => state.posts
@@ -13,17 +13,18 @@ const PostForm = () => {
 
   useEffect(() => {
     if (postAdded) {
-      setText("");
+      setText('');
     }
   }, [postAdded]);
 
   const onSubmitForm = useCallback(e => {
     e.preventDefault();
+    // 없으면 form에서 페이지 reloading이 된다.
     dispatch({
       type: ADD_POST_REQUEST,
       data: {
-        text
-      }
+        text,
+      },
     });
   }, []);
 
@@ -48,26 +49,24 @@ const PostForm = () => {
           <Button>이미지 업로드</Button>
           <Button
             type="primary"
-            style={{ float: "right" }}
+            style={{ float: 'right' }}
             htmlType="submit"
             loading={isAddingPost}>
             생성
           </Button>
         </div>
         <div>
-          {imagePaths.map((value, index) => {
-            return (
-              <div
-                key={index}
-                style={{
-                  maxWidth: "300px",
-                  margin: "0 auto"
-                }}>
-                <img src={value} alt={value} style={{ maxWidth: "100%" }} />
-                <Button>제거</Button>
-              </div>
-            );
-          })}
+          {imagePaths.map((value, index) => (
+            <div
+              key={index}
+              style={{
+                maxWidth: '300px',
+                margin: '0 auto',
+              }}>
+              <img src={value} alt={value} style={{ maxWidth: '100%' }} />
+              <Button>제거</Button>
+            </div>
+          ))}
         </div>
       </Form>
     </div>

@@ -5,16 +5,16 @@ import {
   call,
   put,
   takeEvery,
-  delay
-} from "redux-saga/effects";
+  delay,
+} from 'redux-saga/effects';
 import {
   LOG_IN_REQUEST,
   LOG_IN_SUCCESS,
   LOG_IN_FAILURE,
   SIGN_UP_FAILURE,
   SIGN_UP_REQUEST,
-  SIGN_UP_SUCCESS
-} from "../reducers/user";
+  SIGN_UP_SUCCESS,
+} from '../reducers/user';
 
 function loginAPI() {
   //서버에 api 요청을 보내는 부분
@@ -26,13 +26,13 @@ function* login() {
     // login api 요청
     yield delay(2000);
     yield put({
-      type: LOG_IN_SUCCESS
+      type: LOG_IN_SUCCESS,
     });
     // 로그인 성공시, put = dispatch
   } catch (err) {
     console.error(err);
     yield put({
-      type: LOG_IN_FAILURE
+      type: LOG_IN_FAILURE,
     });
     // 로그인 실패시
   }
@@ -66,21 +66,21 @@ function* watchLogin() {
 // }
 
 function signUpAPI() {
-  return axios.post("/signup");
+  return axios.post('/signup');
 }
 
 function* signUp() {
   try {
     yield delay(2000);
-    throw new Error("error");
+    throw new Error('sign up error!!');
     yield put({
-      type: SIGN_UP_SUCCESS
+      type: SIGN_UP_SUCCESS,
     });
   } catch (err) {
     console.error(err);
     yield put({
       type: SIGN_UP_FAILURE,
-      error: err
+      error: err,
     });
   }
 }

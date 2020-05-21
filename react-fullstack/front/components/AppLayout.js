@@ -6,7 +6,7 @@ import UserProfile from "./UserProfile";
 import { useSelector } from "react-redux";
 
 const AppLayout = ({ children }) => {
-  const { isLoggedIn } = useSelector(state => state.user);
+  const { isLoggedIn } = useSelector((state) => state.user);
   return (
     <div>
       <Menu mode="horizontal">
@@ -30,10 +30,10 @@ const AppLayout = ({ children }) => {
         </Link>
       </Button> */}
       <Row gutter={8}>
-        <Col xs={24} md={6}>
+        <Col xs={24} md={8}>
           {isLoggedIn ? <UserProfile /> : <LoginForm />}
         </Col>
-        <Col xs={24} md={8}>
+        <Col xs={24} md={12}>
           {children}
         </Col>
       </Row>

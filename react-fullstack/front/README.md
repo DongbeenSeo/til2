@@ -70,3 +70,28 @@ function* generator(){
 # Back-end
 
 ## Library
+
+- express
+  - javascript를 실행시키는 node위에 프레임워크인 `express`를 통해 서버구축
+- axios
+  - http요청에 가장 많이 사용
+- bcrypt
+  - 비밀번호 암호화
+- cookie-parser / express-session
+  - 로그인에 쿠키와 세션을 사용하기 위한
+- dotenv
+  - 환경변수 세팅, 비밀번호를 관리
+- cors
+  - 도메인이 다른 back-end, front-end 서버 사이의 제약을 해결
+- helmet / hpp
+  - node와 express의 보안을 담당
+- morgan
+  - 서버 로깅 (요청과 응답 등)
+- multer
+  - 이미지 업로드
+- passport / passport-local
+  - 로그인 관리
+- sequelize / sequelize-cli
+  - ORM(Object-Relational Mapping), SQL과 javascript를 연결
+- nodemon
+  - code hot-loading

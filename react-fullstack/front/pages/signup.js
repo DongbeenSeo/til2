@@ -1,13 +1,13 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { Form, Input, Checkbox, Button } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
-import Router from 'next/router';
+import React, { useState, useCallback, useEffect } from "react";
+import { Form, Input, Checkbox, Button } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import Router from "next/router";
 
-import { SIGN_UP_REQUEST } from '../reducers/user';
+import { SIGN_UP_REQUEST } from "../reducers/user";
 
 export const useInput = (initValue = null) => {
   const [value, setter] = useState(initValue);
-  const handler = useCallback(e => {
+  const handler = useCallback((e) => {
     setter(e.target.value);
   }, []);
   return [value, handler];
@@ -17,7 +17,7 @@ const signup = () => {
   // const [id, setId] = useState('');
   // const [nick, setNick] = useState('');
   // const [password, setPassword] = useState('');
-  const [passwordCheck, setPasswordCheck] = useState('');
+  const [passwordCheck, setPasswordCheck] = useState("");
   const [term, setTerm] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [termError, setTermError] = useState(false);
@@ -25,23 +25,23 @@ const signup = () => {
 
   //custom hook
 
-  const [id, onChangeId] = useInput('');
-  const [nick, onChangeNickname] = useInput('');
-  const [password, onChangePassword] = useInput('');
+  const [id, onChangeId] = useInput("");
+  const [nick, onChangeNickname] = useInput("");
+  const [password, onChangePassword] = useInput("");
 
   const dispatch = useDispatch();
 
-  const { isSigningUp, me } = useSelector(state => state.user);
+  const { isSigningUp, me } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (me) {
-      alert('메인으로 이동');
-      Router.push('/');
+      alert("메인으로 이동");
+      Router.push("/");
     }
   }, [me && me.id]);
 
   const onSubmit = useCallback(
-    e => {
+    (e) => {
       e.preventDefault();
       //webpack에 console.log없애는 설정이 있음
       if (!term) {
@@ -50,13 +50,13 @@ const signup = () => {
       return dispatch({
         type: SIGN_UP_REQUEST,
         data: {
-          id,
+          userId: id,
           password,
-          nick,
+          nickname: nick,
         },
       });
     },
-    [password, passwordCheck, term]
+    [id, nick, password, passwordCheck, term]
   );
 
   // const onChangeId = e => {
@@ -73,8 +73,8 @@ const signup = () => {
   // };
 
   const onChangePasswordCheck = useCallback(
-    e => {
-      if (password === '') {
+    (e) => {
+      if (password === "") {
         setPasswordRequired(true);
       } else {
         setPasswordError(e.target.value !== password);
@@ -84,14 +84,14 @@ const signup = () => {
     [password]
   );
 
-  const onChangeTerm = useCallback(e => {
+  const onChangeTerm = useCallback((e) => {
     setTermError(!e.target.checked);
     setTerm(e.target.checked);
   }, []);
 
   return (
     <div style={{ padding: 10 }}>
-      <div style={{ fontSize: 18, fontWeight: 'bold' }}>회원가입</div>
+      <div style={{ fontSize: 18, fontWeight: "bold" }}>회원가입</div>
       <Form onSubmit={onSubmit}>
         <div>
           <label htmlFor="user-id">아이디</label>
@@ -134,19 +134,19 @@ const signup = () => {
             value={passwordCheck}
             onChange={onChangePasswordCheck}
           />
-        </div>{' '}
+        </div>{" "}
         {passwordError && (
-          <div style={{ color: 'red' }}>비밀번호가 일치하지 않습니다.</div>
+          <div style={{ color: "red" }}>비밀번호가 일치하지 않습니다.</div>
         )}
         {passwordRequired && (
-          <div style={{ color: 'red' }}>비밀번호를 먼저 입력해주세요.</div>
+          <div style={{ color: "red" }}>비밀번호를 먼저 입력해주세요.</div>
         )}
         <div>
           <Checkbox name="user-term" checked={term} onChange={onChangeTerm}>
             약관동의
           </Checkbox>
           {termError && (
-            <div style={{ marginTop: 10, color: 'red' }}>
+            <div style={{ marginTop: 10, color: "red" }}>
               약관에 동의해주세요
             </div>
           )}

@@ -43,7 +43,7 @@ const initState = {
   me: null, // 내정보
   follwingList: [], // 팔로잉 리스트
   follwerList: [], // 팔로워 리스트
-  userInfo: null // 남의 정보
+  userInfo: null, // 남의 정보
 };
 
 const dummy = {
@@ -52,9 +52,9 @@ const dummy = {
   following: [],
   follower: [],
   images: [
-    "http://rilly.co.kr/web/product/big/201906/e1ff138fe71a08399d094840fd39a686.jpg"
+    "http://rilly.co.kr/web/product/big/201906/e1ff138fe71a08399d094840fd39a686.jpg",
   ],
-  id: 1
+  id: 1,
 };
 
 // export const logoutAction = {
@@ -74,7 +74,7 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         isLoggingIn: true,
-        logInErrorReason: ""
+        logInErrorReason: "",
       };
     }
     case LOG_IN_SUCCESS: {
@@ -83,7 +83,7 @@ const reducer = (state = initState, action) => {
         isLoggingIn: false,
         isLoggedIn: true,
         me: dummy,
-        isloading: false
+        isloading: false,
       };
     }
     case LOG_IN_FAILURE: {
@@ -91,14 +91,14 @@ const reducer = (state = initState, action) => {
         ...state,
         isLoggingIn: false,
         isLoggedIn: false,
-        logInErrorReason: action.error
+        logInErrorReason: action.error,
       };
     }
     case LOG_OUT_REQUEST: {
       return {
         ...state,
         isLoggedIn: false,
-        me: null
+        me: null,
       };
     }
     case SIGN_UP_REQUEST: {
@@ -106,26 +106,27 @@ const reducer = (state = initState, action) => {
         ...state,
         isSigningUp: true,
         isSignedUp: false,
-        signUpErrorReason: ""
+        signUpErrorReason: "",
       };
     }
     case SIGN_UP_SUCCESS: {
       return {
         ...state,
         isSigningUp: false,
-        isSignedUp: true
+        isSignedUp: true,
       };
     }
     case SIGN_UP_FAILURE: {
+      console.log(`SIGN_UP_FAILURE: ${JSON.stringify(action, null, 4)}`);
       return {
         ...state,
         isSigningUp: false,
-        signUpErrorReason: action.error
+        signUpErrorReason: action.error,
       };
     }
     default: {
       return {
-        ...state
+        ...state,
       };
     }
   }

@@ -1,7 +1,13 @@
 const express = require("express");
+const morgan = require("morgan");
+const cors = require("cors");
+const app = express();
 
 const db = require("./models");
-const app = express();
+const userAPIRouter = require("./routes/user");
+const postAPIRouter = require("./routes/post");
+const postsAPIRouter = require("./routes/posts");
+
 db.sequelize.sync();
 
 /**
@@ -12,15 +18,17 @@ db.sequelize.sync();
  * delete: 삭제
  */
 
-app.get("/", (req, res) => {
-  // http://localhost:8080/${address}
-  res.send("Hello server"); // address안에 들어가는 주소 설정
-});
+app.use(morgan("dev"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
-app.get("/about", (req, res) => {
-  res.send("Hello, about");
-});
+// API는 다른 서비스가 내 서비스의 기능을 실행할 수 있게 열어둔 창구
 
-app.listen(4001, () => {
+app.use("/api/user", userAPIRouter);
+app.use("/api/post", postAPIRouter);
+app.use("/api/posts", postsAPIRouter);
+
+app.listen(3065, () => {
   console.log("server is running on localhost:3065");
 });

@@ -1,3 +1,4 @@
+import axios from "axios";
 import {
   all,
   fork,
@@ -6,7 +7,7 @@ import {
   put,
   takeEvery,
   delay,
-} from 'redux-saga/effects';
+} from "redux-saga/effects";
 import {
   LOG_IN_REQUEST,
   LOG_IN_SUCCESS,
@@ -14,7 +15,7 @@ import {
   SIGN_UP_FAILURE,
   SIGN_UP_REQUEST,
   SIGN_UP_SUCCESS,
-} from '../reducers/user';
+} from "../reducers/user";
 
 function loginAPI() {
   //서버에 api 요청을 보내는 부분
@@ -65,14 +66,15 @@ function* watchLogin() {
 //   }
 // }
 
-function signUpAPI() {
-  return axios.post('/signup');
+function signUpAPI(signUpData) {
+  return axios.post("http://localhost:3065/api/user/", signUpData);
 }
 
-function* signUp() {
+function* signUp(action) {
   try {
-    yield delay(2000);
-    throw new Error('sign up error!!');
+    // yield delay(2000);
+    // throw new Error('sign up error!!');
+    yield call(signUpAPI, action.data);
     yield put({
       type: SIGN_UP_SUCCESS,
     });

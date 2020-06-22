@@ -82,7 +82,7 @@ const reducer = (state = initState, action) => {
         ...state,
         isLoggingIn: false,
         isLoggedIn: true,
-        me: dummy,
+        me: action.data,
         isloading: false,
       };
     }

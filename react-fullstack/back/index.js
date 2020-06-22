@@ -28,7 +28,13 @@ passportConfig();
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
+// origin, credential - front & back server간에 cookie를 전달받을 수 있게 하는 option
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(
   expressSession({

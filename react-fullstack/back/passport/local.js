@@ -13,7 +13,7 @@ module.exports = () => {
       async (userId, password, done) => {
         try {
           const user = await db.User.findOne({
-            where: userId,
+            where: { userId },
           });
           if (!user) {
             //fail

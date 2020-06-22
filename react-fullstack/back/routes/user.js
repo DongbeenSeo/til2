@@ -41,7 +41,11 @@ router.get("/:id", (req, res) => {
   //남의 정보 가져오는 것 ex) http://localhost:3065/3, :id - req.params.id
 });
 
-router.post("/logout", (req, res) => {});
+router.post("/logout", (req, res) => {
+  req.logout();
+  req.session.destroy();
+  res.send("Success Logout");
+});
 
 router.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
@@ -56,11 +60,11 @@ router.post("/login", (req, res, next) => {
       if (loginErr) {
         return next(loginErr);
       }
-      const filteredUser = Object.assign({}, user);
+      const filteredUser = Object.assign({}, user.toJSON());
       delete filteredUser.password;
       return res.json(user);
     });
-  });
+  })(req, res, next);
 });
 
 router.get("/:id/follow", (req, res) => {});

@@ -1,6 +1,6 @@
 const express = require("express");
-
 const bcrypt = require("bcrypt");
+const passport = require("passport");
 
 const db = require("../models");
 
@@ -38,12 +38,30 @@ router.post("/", async (req, res, next) => {
 }); //회원가입
 
 router.get("/:id", (req, res) => {
-  //남의 정보 가져오는 것 ex) /3, :id - req.params.id
+  //남의 정보 가져오는 것 ex) http://localhost:3065/3, :id - req.params.id
 });
 
 router.post("/logout", (req, res) => {});
 
-router.post("/login", (req, res) => {});
+router.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      console.error(err);
+      return next(err);
+    }
+    if (info) {
+      return res.status(401).send(info.reason);
+    }
+    return req.login(user, (loginErr) => {
+      if (loginErr) {
+        return next(loginErr);
+      }
+      const filteredUser = Object.assign({}, user);
+      delete filteredUser.password;
+      return res.json(user);
+    });
+  });
+});
 
 router.get("/:id/follow", (req, res) => {});
 

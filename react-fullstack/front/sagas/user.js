@@ -17,15 +17,16 @@ import {
   SIGN_UP_SUCCESS,
 } from "../reducers/user";
 
-function loginAPI() {
+function loginAPI(loginData) {
   //서버에 api 요청을 보내는 부분
+  return axios.post("/login", loginData);
 }
 
-function* login() {
+function* login(action) {
   try {
-    // yield call(loginAPI);
     // login api 요청
-    yield delay(2000);
+    // yield delay(2000);
+    yield call(loginAPI, action.data);
     yield put({
       type: LOG_IN_SUCCESS,
     });

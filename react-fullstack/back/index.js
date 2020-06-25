@@ -34,7 +34,10 @@ app.use(
     credentials: true,
   })
 );
-// origin, credential - front & back server간에 cookie를 전달받을 수 있게 하는 option
+/**
+ * origin, credential
+ * - front & back server간에 cookie를 전달받을 수 있게 하는 option
+ */
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(
   expressSession({
@@ -45,8 +48,12 @@ app.use(
       httpOnly: true,
       secure: false, //https를 쓸 때 true
     },
+    name: "rnbck",
   })
 );
+
+// express로 cookie에 session이 저장되면 connect.sid로 저장
+// 때문에 express의 취약점으로 공격을 당하기 때문에 name을 변경해주어야 한다.
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -58,6 +65,6 @@ app.use("/api/user", userAPIRouter);
 app.use("/api/post", postAPIRouter);
 app.use("/api/posts", postsAPIRouter);
 
-app.listen(3065, () => {
+app.listen(3066, () => {
   console.log("server is running on localhost:3065");
 });

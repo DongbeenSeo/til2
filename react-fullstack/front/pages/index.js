@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
-import PostForm from '../components/PostForm';
-import PostCard from '../components/PostCard';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import { LOG_IN, LOG_OUT, loginAction, logoutAction } from '../reducers/user';
+import React, { useEffect } from "react";
+import PostForm from "../components/PostForm";
+import PostCard from "../components/PostCard";
+import { connect, useDispatch, useSelector } from "react-redux";
+import { LOG_IN, LOG_OUT, loginAction, logoutAction } from "../reducers/user";
+import { LOAD_MAIN_POSTS_REQUEST } from "../reducers/post";
 
 // { dispatch, isLogin, user, login, logout }
 const Home = () => {
@@ -13,20 +14,26 @@ const Home = () => {
   //   // });
   // }, []);
   //input: dependensy parameter에 아무것도 넣지 않으면 componentDidMount와 같다
-  const { isLoggedIn, user } = useSelector(state => state.user);
-  const { mainPosts } = useSelector(state => state.posts);
+  const { me, user } = useSelector((state) => state.user);
+  const { mainPosts } = useSelector((state) => state.posts);
 
   useEffect(() => {
-    // dispatch({
-    //   type: "HELLO_SAGA"
-    // });
+    dispatch({
+      type: LOAD_MAIN_POSTS_REQUEST,
+    });
   }, []);
+
+  // useEffect(() => {
+  // dispatch({
+  //   type: "HELLO_SAGA"
+  // });
+  // }, []);
 
   // hooks없이 store와 connect하는 code
   // const { user, isLoggedIn } = props;
   return (
     <div style={{ padding: 10 }}>
-      {isLoggedIn && <PostForm />}
+      {me && <PostForm />}
       {mainPosts.map((p, index) => (
         <PostCard key={index} post={p} />
       ))}

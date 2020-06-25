@@ -15,25 +15,23 @@ const UserProfile = () => {
   return (
     <div style={{ padding: 10 }}>
       <Card
-        actions={
-          [
-            // <div key="post">
-            //   like
-            //   <br />
-            //   {me.post}
-            // </div>,
-            // <div key="following">
-            //   following
-            //   <br />
-            //   {me.following}
-            // </div>,
-            // <div key="follower">
-            //   follower
-            //   <br />
-            //   {me.follower}
-            // </div>
-          ]
-        }>
+        actions={[
+          <div key="post">
+            like
+            <br />
+            {me.post}
+          </div>,
+          <div key="following">
+            following
+            <br />
+            {me.following}
+          </div>,
+          <div key="follower">
+            follower
+            <br />
+            {me.follower}
+          </div>,
+        ]}>
         <Card.Meta
           avatar={<Avatar>{me.nickname[0]}</Avatar>}
           title={me.nickname}

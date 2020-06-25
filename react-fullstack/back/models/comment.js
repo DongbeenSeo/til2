@@ -9,13 +9,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       charset: "utf8mb4", // 한글  + 이모티콘
-      clloate: "utfmb4_general_ci",
+      collate: "utf8mb4_general_ci",
     }
   );
 
   Comment.associate = (db) => {
-    db.Comment.hasMany(db.User);
-    db.Comment.hasMany(db.Post);
+    db.Comment.belongsTo(db.User);
+    db.Comment.belongsTo(db.Post);
   };
 
   return Comment;

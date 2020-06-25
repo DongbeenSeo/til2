@@ -15,10 +15,15 @@ import {
   SIGN_UP_FAILURE,
   SIGN_UP_REQUEST,
   SIGN_UP_SUCCESS,
+  LOG_OUT_SUCCESS,
+  LOG_OUT_FAILURE,
+  LOG_OUT_REQUEST,
+  LOAD_USER_SUCCESS,
+  LOAD_USER_FAILURE,
+  LOAD_USER_REQUEST,
 } from "../reducers/user";
 
-axios.defaults.baseURL = "http://localhost:3065/api";
-
+//log in
 function loginAPI(loginData) {
   //서버에 api 요청을 보내는 부분
   return axios.post("/user/login", loginData, {
@@ -40,6 +45,7 @@ function* login(action) {
     console.error(err);
     yield put({
       type: LOG_IN_FAILURE,
+      error: err,
     });
     // 로그인 실패시
   }
@@ -72,6 +78,7 @@ function* watchLogin() {
 //   }
 // }
 
+//sign up
 function signUpAPI(signUpData) {
   return axios.post("/user/", signUpData);
 }
@@ -97,6 +104,69 @@ function* watchSignUp() {
   yield takeEvery(SIGN_UP_REQUEST, signUp);
 }
 
+function LogOutAPI() {
+  return axios.post(
+    "/user/logout",
+    {},
+    {
+      withCredentials: true,
+    }
+  );
+}
+
+// logout
+function* LogOut(action) {
+  try {
+    yield call(LogOutAPI);
+    yield put({
+      type: LOG_OUT_SUCCESS,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LOG_OUT_FAILURE,
+      error: err,
+    });
+  }
+}
+
+function* watchLogOut() {
+  yield takeEvery(LOG_OUT_REQUEST, LogOut);
+}
+
+//load user data
+
+function loadUserAPI() {
+  return axios.get("/user/", {
+    withCredentials: true,
+  });
+}
+
+function* loadUser(action) {
+  try {
+    const result = yield call(loadUserAPI);
+    yield put({
+      type: LOAD_USER_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LOAD_USER_FAILURE,
+      error: err,
+    });
+  }
+}
+
+function* watchLoadUser() {
+  yield takeEvery(LOAD_USER_REQUEST, loadUser);
+}
+
 export default function* userSaga() {
-  yield all([fork(watchLogin), fork(watchSignUp)]);
+  yield all([
+    fork(watchLogin),
+    fork(watchLogOut),
+    fork(watchLoadUser),
+    fork(watchSignUp),
+  ]);
 }

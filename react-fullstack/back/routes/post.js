@@ -4,17 +4,18 @@ const db = require("../models");
 
 router.post("/", async (req, res, next) => {
   // POST /api/post
-  console.log(`POST /api/post`);
+  // console.log(`POST /api/post`);
   try {
     const hashtags = req.body.content.match(/#[^\s]+/g);
-    const newPost = await db.Post.create({
+    let newPost = await db.Post.create({
       content: req.body.content,
       UserId: req.user.id,
     });
     if (hashtags) {
-      const resultawait = Promise.all(
+      console.log(`----------newPost-----------\n`);
+      const result = await Promise.all(
         //findOrCreate : //없으면 만들고 있으면 찾고
-        hashtag.map((tag) =>
+        hashtags.map((tag) =>
           db.Hashtag.findOrCreate({
             where: {
               name: tag.slice(1).toLowerCase(),
@@ -22,7 +23,7 @@ router.post("/", async (req, res, next) => {
           })
         )
       );
-      console.log(result);
+      console.log(newPost);
       await newPost.addHashtags(result.map((r) => r[0]));
       /**
        * post에 hashtag를 추가
@@ -42,6 +43,7 @@ router.post("/", async (req, res, next) => {
       include: [
         {
           model: db.User,
+          attributes: ["id", "nickname"],
         },
       ],
     });

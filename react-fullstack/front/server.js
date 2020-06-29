@@ -30,6 +30,14 @@ app.prepare().then(() => {
     })
   );
 
+  server.get("/hashtag/:tag", (req, res, next) => {
+    return app.render(req, res, "/hashtag", { tag: req.params.tag });
+  });
+
+  server.get("/user/:id", (req, res, next) => {
+    return app.render(req, res, "/user", { id: req.params.id });
+  });
+
   server.get("*", (req, res) => {
     return handle(req, res);
   });

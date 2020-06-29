@@ -15,7 +15,7 @@ const Home = () => {
   // }, []);
   //input: dependensy parameter에 아무것도 넣지 않으면 componentDidMount와 같다
   const { me, user } = useSelector((state) => state.user);
-  const { mainPosts } = useSelector((state) => state.posts);
+  const { mainPosts } = useSelector((state) => state.post);
 
   useEffect(() => {
     dispatch({

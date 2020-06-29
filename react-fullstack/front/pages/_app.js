@@ -1,16 +1,16 @@
-import React from 'react';
-import Head from 'next/head';
-import { Provider } from 'react-redux';
-import { createStore, compose, applyMiddleware } from 'redux';
-import withRedux from 'next-redux-wrapper';
-import createSagaMiddleware from 'redux-saga';
+import React from "react";
+import Head from "next/head";
+import { Provider } from "react-redux";
+import { createStore, compose, applyMiddleware } from "redux";
+import withRedux from "next-redux-wrapper";
+import createSagaMiddleware from "redux-saga";
 
-import AppLayout from '../components/AppLayout';
+import AppLayout from "../components/AppLayout";
 
-import reducer from '../reducers';
-import rootSaga from '../sagas';
+import reducer from "../reducers";
+import rootSaga from "../sagas";
 
-const NodeBird = ({ Component, store }) => {
+const NodeBird = ({ Component, store, pageProps }) => {
   return (
     <Provider store={store}>
       <Head>
@@ -22,10 +22,20 @@ const NodeBird = ({ Component, store }) => {
         <script src="https://cdnjs.cloudflare.com/ajax/libs/antd/3.26.12/antd.js" />
       </Head>
       <AppLayout>
-        <Component />
+        <Component {...pageProps} />
       </AppLayout>
     </Provider>
   );
+};
+
+NodeBird.getInitialProps = async (context) => {
+  const { ctx, Component } = context;
+  let pageProps = {};
+  if (Component.getInitialProps) {
+    console.log(ctx);
+    pageProps = await Component.getInitialProps(ctx);
+  }
+  return { pageProps };
 };
 
 const configureStore = (initState, options) => {
@@ -38,14 +48,14 @@ const configureStore = (initState, options) => {
   //   compose;
 
   const enhancer =
-    process.env.NODE_ENV === 'production'
+    process.env.NODE_ENV === "production"
       ? compose(applyMiddleware(...middlewares))
       : compose(
           applyMiddleware(...middlewares),
           !options.isServer &&
-            typeof window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined'
+            typeof window.__REDUX_DEVTOOLS_EXTENSION__ !== "undefined"
             ? window.__REDUX_DEVTOOLS_EXTENSION__()
-            : f => f
+            : (f) => f
         );
 
   const store = createStore(reducer, initState, enhancer);

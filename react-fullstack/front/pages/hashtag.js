@@ -1,7 +1,35 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { LOAD_HASHTAG_POSTS_REQUEST } from "../reducers/post";
+import PostCard from "../components/PostCard";
 
-function hashtag() {
-  return <div>Hashtag</div>;
+function Hashtag({ tag }) {
+  const dispatch = useDispatch();
+  const { mainPosts } = useSelector((state) => state.post);
+
+  useEffect(() => {
+    dispatch({
+      type: LOAD_HASHTAG_POSTS_REQUEST,
+      data: tag,
+    });
+  }, []);
+  return (
+    <div>
+      {mainPosts.map((value) => (
+        <PostCard key={value.createAt} post={value} />
+      ))}
+    </div>
+  );
 }
 
-export default hashtag;
+/**
+ * next에서 넣어준 최초의 lifeCycle
+ * componentDidMount보다 먼저 실행된다.
+ * front와 server에서 모두 실행된다.
+ */
+Hashtag.getInitialProps = async (context) => {
+  console.log("hashtag getInitialProps", context.query.tag);
+  return { tag: context.query.tag };
+};
+
+export default Hashtag;

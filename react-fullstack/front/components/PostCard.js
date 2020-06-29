@@ -11,7 +11,7 @@ const PostCard = ({ post }) => {
   const [commentFormOpened, setCommentFormOpened] = useState(false);
   const [commentText, setCommentText] = useState("");
   const { me } = useSelector((state) => state.user);
-  const { commentAdded, isAddingComment } = useSelector((state) => state.posts);
+  const { commentAdded, isAddingComment } = useSelector((state) => state.post);
   const dispatch = useDispatch();
 
   const onToggleComment = useCallback(() => {
@@ -80,7 +80,7 @@ const PostCard = ({ post }) => {
               {post.content.split(/(#[^\s]+)/g).map((v) => {
                 if (v.match(/#[^\s]+/)) {
                   return (
-                    <Link key={v} href="/hashtag">
+                    <Link key={v} href={`/hashtag/${v.slice(1)}`}>
                       <a>{v}</a>
                     </Link>
                   );

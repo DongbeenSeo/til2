@@ -8,7 +8,7 @@ const PostForm = () => {
   const [text, setText] = useState("");
 
   const { imagePaths, isAddingPost, postAdded } = useSelector((state) => {
-    return state.posts;
+    return state.post;
   });
 
   useEffect(() => {

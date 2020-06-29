@@ -67,6 +67,11 @@ function* generator(){
 // 무한의 개념 or 비동기 처리를 하는 데에 자주 사용하는 함수
 ```
 
+### 3. Server-side rendering
+
+로그인상태를 예를 들어 SPA에서 화면이 리로딩될때 로그인 상태를 받아오기 전까지
+미로그인 상태를 가려주기 위해 back-end 에서 처리하는 기술
+
 # Back-end
 
 ## Library

@@ -32,7 +32,7 @@ const Home = () => {
   // hooks없이 store와 connect하는 code
   // const { user, isLoggedIn } = props;
   return (
-    <div style={{ padding: 10 }}>
+    <div>
       {me && <PostForm />}
       {mainPosts.map((p, index) => (
         <PostCard key={index} post={p} />

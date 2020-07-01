@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../models");
+const { isLoggedIn } = require("./middleware");
 
-router.post("/", async (req, res, next) => {
+router.post("/", isLoggedIn, async (req, res, next) => {
   // POST /api/post
   // console.log(`POST /api/post`);
   try {
@@ -12,7 +13,6 @@ router.post("/", async (req, res, next) => {
       UserId: req.user.id,
     });
     if (hashtags) {
-      console.log(`----------newPost-----------\n`);
       const result = await Promise.all(
         //findOrCreate : //없으면 만들고 있으면 찾고
         hashtags.map((tag) =>
@@ -23,7 +23,6 @@ router.post("/", async (req, res, next) => {
           })
         )
       );
-      console.log(newPost);
       await newPost.addHashtags(result.map((r) => r[0]));
       /**
        * post에 hashtag를 추가
@@ -55,5 +54,60 @@ router.post("/", async (req, res, next) => {
 });
 
 router.post("/images", (req, res) => {});
+
+router.get("/:id/comments", async (req, res, next) => {
+  try {
+    const post = await db.Post.findOne({ where: { id: req.params.id } });
+    if (!post) {
+      return res.status(404).send("not exist post");
+    }
+    const comments = await db.Comment.findAll({
+      where: {
+        PostId: req.params.id,
+      },
+      order: [["createdAt", "ASC"]],
+      include: [
+        {
+          model: db.User,
+          attributes: ["id", "nickname"],
+        },
+      ],
+    });
+    res.json(comments);
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
+
+router.post("/:id/comment", isLoggedIn, async (req, res, next) => {
+  try {
+    const post = await db.Post.findOne({ where: { id: req.params.id } });
+    if (!post) {
+      return res.status(404).send("not exist post");
+    }
+    const newComment = await db.Comment.create({
+      PostId: post.id,
+      UserId: req.user.id,
+      content: req.body.content,
+    });
+    await post.addComment(newComment.id);
+    const comment = await db.Comment.findOne({
+      where: {
+        id: newComment.id,
+      },
+      include: [
+        {
+          model: db.User,
+          attributes: ["id", "nickname"],
+        },
+      ],
+    });
+    return res.json(comment);
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
 
 module.exports = router;

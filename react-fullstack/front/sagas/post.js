@@ -23,6 +23,9 @@ import {
   LOAD_USER_POSTS_REQUEST,
   LOAD_USER_POSTS_SUCCESS,
   LOAD_USER_POSTS_FAILURE,
+  LOAD_COMMENTS_SUCCESS,
+  LOAD_COMMENTS_FAILURE,
+  LOAD_COMMENTS_REQUEST,
 } from "../reducers/post";
 import axios from "axios";
 
@@ -49,12 +52,12 @@ function* addPost(action) {
 }
 
 function* watchAddPost() {
-  yield takeEvery(ADD_POST_REQUEST, addPost);
+  yield takeLatest(ADD_POST_REQUEST, addPost);
 }
 
 // watchLoadMainPosts
 function* watchLoadMainPosts() {
-  yield takeEvery(LOAD_MAIN_POSTS_REQUEST, loadMainPosts);
+  yield takeLatest(LOAD_MAIN_POSTS_REQUEST, loadMainPosts);
 }
 function loadMainPostsAPI(postData) {
   return axios.get("/posts");
@@ -78,7 +81,7 @@ function* loadMainPosts(action) {
 
 // watchLoadHashtagPosts
 function* watchLoadHashtagPosts() {
-  yield takeEvery(LOAD_HASHTAG_POSTS_REQUEST, loadHashtagPosts);
+  yield takeLatest(LOAD_HASHTAG_POSTS_REQUEST, loadHashtagPosts);
 }
 function loadHashtagPostsAPI(tag) {
   return axios.get(`/hashtag/${tag}`);
@@ -102,7 +105,7 @@ function* loadHashtagPosts(action) {
 
 // watchLoadUserPosts
 function* watchLoadUserPosts() {
-  yield takeEvery(LOAD_USER_POSTS_REQUEST, loadUserPosts);
+  yield takeLatest(LOAD_USER_POSTS_REQUEST, loadUserPosts);
 }
 
 function loadUserPostsAPI(id) {
@@ -125,16 +128,25 @@ function* loadUserPosts(action) {
   }
 }
 
-function addCommentAPI() {}
+function addCommentAPI(data) {
+  return axios.post(
+    `/post/${data.postId}/comment`,
+    { content: data.comment },
+    {
+      withCredentials: true,
+    }
+  );
+}
 
 //REQUEST에 대한 action
 function* addComment(action) {
   try {
-    yield delay(2000);
+    const result = yield call(addCommentAPI, action.data);
     yield put({
       type: ADD_COMMENT_SUCCESS,
       data: {
         postId: action.data.postId,
+        comment: result.data,
       },
     });
   } catch (err) {
@@ -149,11 +161,39 @@ function* watchAddComment() {
   yield takeLatest(ADD_COMMENT_REQUEST, addComment);
 }
 
+function loadCommentsAPI(postId) {
+  return axios.get(`/post/${postId}/comments`);
+}
+
+//REQUEST에 대한 action
+function* loadComments(action) {
+  try {
+    const result = yield call(loadCommentsAPI, action.data);
+    yield put({
+      type: LOAD_COMMENTS_SUCCESS,
+      data: {
+        postId: action.data,
+        comments: result.data,
+      },
+    });
+  } catch (err) {
+    yield put({
+      type: LOAD_COMMENTS_FAILURE,
+      error: err,
+    });
+  }
+}
+
+function* watchLoadComments() {
+  yield takeLatest(LOAD_COMMENTS_REQUEST, loadComments);
+}
+
 export default function* postSaga() {
   yield all([
     fork(watchAddPost),
     fork(watchLoadMainPosts),
     fork(watchAddComment),
+    fork(watchLoadComments),
     fork(watchLoadHashtagPosts),
     fork(watchLoadUserPosts),
   ]);

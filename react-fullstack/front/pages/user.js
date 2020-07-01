@@ -27,20 +27,20 @@ function User({ id }) {
       {userInfo ? (
         <Card
           actions={[
-            <div key="post">
-              like
+            <div key="twit">
+              twit
               <br />
-              {me.post}
+              {userInfo.Posts}
             </div>,
             <div key="following">
               following
               <br />
-              {me.following}
+              {userInfo.Followings}
             </div>,
             <div key="follower">
               follower
               <br />
-              {me.follower}
+              {userInfo.Followers}
             </div>,
           ]}>
           <Card.Meta
@@ -49,8 +49,9 @@ function User({ id }) {
           />
         </Card>
       ) : null}
-      {mainPosts.map((value) => (
-        <PostCard key={value.createAt} post={value} />
+      <div style={{ height: "10px" }} />
+      {mainPosts.map((value, index) => (
+        <PostCard key={index} post={value} />
       ))}
     </div>
   );

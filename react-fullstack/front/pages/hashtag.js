@@ -15,8 +15,8 @@ function Hashtag({ tag }) {
   }, []);
   return (
     <div>
-      {mainPosts.map((value) => (
-        <PostCard key={value.createAt} post={value} />
+      {mainPosts.map((value, index) => (
+        <PostCard key={index} post={value} />
       ))}
     </div>
   );

@@ -16,8 +16,8 @@ const UserProfile = () => {
     <div style={{ padding: 10 }}>
       <Card
         actions={[
-          <div key="post">
-            like
+          <div key="twit">
+            twit
             <br />
             {me.post}
           </div>,

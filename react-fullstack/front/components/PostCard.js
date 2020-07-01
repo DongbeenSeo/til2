@@ -4,21 +4,26 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import Link from "next/link";
 
-import { ADD_COMMENT_REQUEST } from "../reducers/post";
+import { ADD_COMMENT_REQUEST, LOAD_COMMENTS_REQUEST } from "../reducers/post";
 import { dateFormat } from "../utils";
 
 const PostCard = ({ post }) => {
   const [commentFormOpened, setCommentFormOpened] = useState(false);
   const [commentText, setCommentText] = useState("");
+
+  const dispatch = useDispatch();
+
   const { me } = useSelector((state) => state.user);
   const { commentAdded, isAddingComment } = useSelector((state) => state.post);
-  const dispatch = useDispatch();
 
   const onToggleComment = useCallback(() => {
     setCommentFormOpened((prev) => !prev);
-    // if(!commentFormOpened){
-    //   dispatch
-    // }
+    if (!commentFormOpened) {
+      dispatch({
+        type: LOAD_COMMENTS_REQUEST,
+        data: post.id,
+      });
+    }
   }, []);
 
   const onSubmitComment = useCallback(
@@ -27,14 +32,16 @@ const PostCard = ({ post }) => {
       if (!me) {
         return alert("로그인이 필요합니다.");
       }
+      // console.log(`commentText: ${commentText}`);
       dispatch({
         type: ADD_COMMENT_REQUEST,
         data: {
           postId: post.id,
+          comment: commentText,
         },
       });
     },
-    [me && me.id]
+    [me && me.id, commentText]
   );
 
   useEffect(() => {
@@ -67,7 +74,16 @@ const PostCard = ({ post }) => {
           <Icon type="ellipsis" key="ellipsis" />,
         ]}>
         <Card.Meta
-          avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
+          avatar={
+            <Link
+              // href={`/user/${post.User.id}`} 해당 url은 서버주소이기 때문에 화면 re-rendering이 발생하기 때문에 front주소로 바꿔야한다.
+              href={{ pathname: "/user", query: { id: post.User.id } }}
+              as={`/user/${post.User.id}`}>
+              <a>
+                <Avatar>{post.User.nickname[0]}</Avatar>
+              </a>
+            </Link>
+          }
           title={
             <span>
               {post.User.nickname}&nbsp;
@@ -80,7 +96,13 @@ const PostCard = ({ post }) => {
               {post.content.split(/(#[^\s]+)/g).map((v) => {
                 if (v.match(/#[^\s]+/)) {
                   return (
-                    <Link key={v} href={`/hashtag/${v.slice(1)}`}>
+                    <Link
+                      key={v}
+                      href={{
+                        pathname: "/hashtag",
+                        query: { tag: v.slice(1) },
+                      }}
+                      as={`/hashtag/${v.slice(1)}`}>
                       <a>{v}</a>
                     </Link>
                   );
@@ -93,7 +115,7 @@ const PostCard = ({ post }) => {
       </Card>
       {commentFormOpened && (
         <>
-          <Form onSubmit={onSubmitComment}>
+          <Form onSubmit={onSubmitComment} style={{ marginTop: "10px" }}>
             <Form.Item>
               <Input.TextArea
                 placeholder="please input comment"
@@ -114,8 +136,19 @@ const PostCard = ({ post }) => {
               <li>
                 <Comment
                   author={item.User.nickname}
-                  avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
-                  datetime={item.createdAt}
+                  avatar={
+                    <Link
+                      href={{
+                        pathname: "/user",
+                        query: { id: item.User.id },
+                      }}
+                      as={`/user/${item.User.id}`}>
+                      <a>
+                        <Avatar>{item.User.nickname[0]}</Avatar>
+                      </a>
+                    </Link>
+                  }
+                  datetime={dateFormat(item.createdAt)}
                   content={item.content}
                 />
               </li>

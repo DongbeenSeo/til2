@@ -11,7 +11,7 @@ const dateFormat = (date) => {
   if (date) {
     let newDate = new Date(date);
     let year = newDate.getFullYear().toString();
-    let month = newDate.getMonth().toString();
+    let month = (newDate.getMonth() + 1).toString();
     let dates = newDate.getDate().toString();
     return `${year} - ${addZeroInDate(month)} - ${addZeroInDate(dates)}`;
   } else {

@@ -43,7 +43,7 @@ const AppLayout = ({ children }) => {
         <Col xs={24} md={8}>
           {me ? <UserProfile /> : <LoginForm />}
         </Col>
-        <Col xs={24} md={12}>
+        <Col xs={24} md={12} style={{ padding: 10 }}>
           {children}
         </Col>
       </Row>

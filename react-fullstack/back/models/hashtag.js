@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Hashtag = sequelize.define(
-    "HashTag",
+    "Hashtag",
     {
       name: {
         type: DataTypes.STRING(20),

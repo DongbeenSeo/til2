@@ -3,14 +3,13 @@ const bcrypt = require("bcrypt");
 const passport = require("passport");
 
 const db = require("../models");
+const { isLoggedIn } = require("./middleware");
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
+router.get("/", isLoggedIn, (req, res) => {
   // loadUser
-  if (!req.user) {
-    return res.status(401).send("로그인이 필요합니다.");
-  }
+
   const user = Object.assign({}, req.user.toJSON());
   delete user.password;
   return res.json(user);
@@ -50,7 +49,7 @@ router.post("/", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
   try {
     const user = await db.User.findOne({
-      where: { id: parseInt(req.params.id, 10), attributes: ["id", nickname] },
+      where: { id: parseInt(req.params.id, 10) },
       include: [
         {
           model: db.Post,
@@ -64,7 +63,7 @@ router.get("/:id", async (req, res, next) => {
         },
         {
           model: db.User,
-          as: "Followings",
+          as: "Followers",
           attributes: ["id"],
         },
       ],
@@ -74,7 +73,7 @@ router.get("/:id", async (req, res, next) => {
     jsonUser.Posts = jsonUser.Posts ? jsonUser.Posts.length : 0;
     jsonUser.Followings = jsonUser.Followings ? jsonUser.Followings.length : 0;
     jsonUser.Followers = jsonUser.Followers ? jsonUser.Followers.length : 0;
-    return res.json(user);
+    res.json(jsonUser);
   } catch (e) {
     console.error(e);
     next(e);

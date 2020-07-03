@@ -21,6 +21,12 @@ import {
   LOAD_USER_SUCCESS,
   LOAD_USER_FAILURE,
   LOAD_USER_REQUEST,
+  FOLLOW_USER_REQUEST,
+  UNFOLLOW_USER_SUCCESS,
+  FOLLOW_USER_FAILURE,
+  FOLLOW_USER_SUCCESS,
+  UNFOLLOW_USER_FAILURE,
+  UNFOLLOW_USER_REQUEST,
 } from "../reducers/user";
 
 //log in
@@ -163,11 +169,63 @@ function* watchLoadUser() {
   yield takeEvery(LOAD_USER_REQUEST, loadUser);
 }
 
+function followAPI(userId) {
+  return axios.post(`/user/${userId}/follow`, {}, { withCredentials: true });
+}
+
+function* follow(action) {
+  try {
+    const result = yield call(followAPI, action.data);
+    yield put({
+      type: FOLLOW_USER_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: FOLLOW_USER_FAILURE,
+      error: err,
+    });
+    alert(err.response.data);
+  }
+}
+
+function* watchFollow() {
+  yield takeEvery(FOLLOW_USER_REQUEST, follow);
+}
+
+function unfollowAPI(postId) {
+  return axios.delete(`/user/${postId}/follow`, { withCredentials: true });
+}
+
+function* unfollow(action) {
+  try {
+    const result = yield call(unfollowAPI, action.data);
+    yield put({
+      type: UNFOLLOW_USER_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: UNFOLLOW_USER_FAILURE,
+      error: err,
+    });
+    alert(err.response.data);
+  }
+}
+
+function* watchUnFollow() {
+  yield takeEvery(UNFOLLOW_USER_REQUEST, unfollow);
+}
+
 export default function* userSaga() {
   yield all([
     fork(watchLogin),
     fork(watchLogOut),
     fork(watchLoadUser),
     fork(watchSignUp),
+    fork(watchFollow),
+    fork(watchUnFollow),
   ]);
 }

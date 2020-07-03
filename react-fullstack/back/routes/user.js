@@ -131,9 +131,32 @@ router.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
-router.get("/:id/follow", (req, res) => {});
+router.post("/:id/follow", isLoggedIn, async (req, res, next) => {
+  try {
+    const me = await db.User.findOne({
+      where: { id: req.user.id },
+    });
+    await me.addFollowing(req.params.id);
+    res.send(req.params.id);
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
 
-router.delete("/:id/follow", (req, res) => {});
+router.delete("/:id/follow", isLoggedIn, async (req, res, next) => {
+  try {
+    const me = await db.User.findOne({
+      where: { id: req.user.id },
+    });
+
+    await me.removeFollowing(req.params.id);
+    res.send(req.params.id);
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
 
 router.delete("/:id/follower", (req, res) => {});
 
@@ -141,6 +164,7 @@ router.get("/:id/posts", async (req, res, next) => {
   try {
     const posts = await db.Post.findAll({
       where: { UserId: parseInt(req.params.id, 10), RetweetId: null },
+      order: [["createdAt", "DESC"]],
       include: [
         {
           model: db.User,

@@ -59,7 +59,6 @@ router.post("/", isLoggedIn, upload.none(), async (req, res, next) => {
     }
     if (req.body.image) {
       // 이미지 주소를 여러개 올리면 image: [addr1, addr2]
-      console.log(`req.body: ${JSON.stringify(req.body, null, 4)}`);
       if (Array.isArray(req.body.image)) {
         const images = await Promise.all(
           req.body.image.map((img) => {
@@ -173,7 +172,6 @@ router.post("/:id/like", isLoggedIn, async (req, res, next) => {
     if (!post) {
       return res.status(404).send("포스트가 존재 하지 않습니다.");
     }
-    console.log(`like post: ${JSON.stringify(req.user.toJSON())}`);
     await post.addLiker(req.user.id);
     res.json({ userId: req.user.id });
   } catch (e) {
@@ -192,7 +190,6 @@ router.delete("/:id/like", isLoggedIn, async (req, res, next) => {
     if (!post) {
       return res.status(404).send("포스트가 존재 하지 않습니다.");
     }
-    console.log(`unlike post: ${JSON.stringify(req.user.toJSON())}`);
     await post.removeLiker(req.user.id);
     res.json({ userId: req.user.id });
   } catch (e) {
@@ -215,13 +212,6 @@ router.post("/:id/retweet", isLoggedIn, async (req, res, next) => {
     if (!post) {
       return res.status(404).send("포스트가 존재하지 않습니다.");
     }
-    console.log(
-      `-------------post.Retweet------------\nRetweet: ${JSON.stringify(
-        post,
-        null,
-        4
-      )}`
-    );
     if (
       req.user.id === post.UserId ||
       (post.Retweet && post.Retweet.UserId === req.user.id)

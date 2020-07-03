@@ -11,6 +11,15 @@ router.get("/", async (req, res, next) => {
           model: db.User,
           attributes: ["id", "nickname"], //비밀번호를 제외한 데이터만 불러오기 위해
         },
+        {
+          model: db.Image,
+        },
+        {
+          model: db.User,
+          through: "Like",
+          as: "Likers",
+          attributes: ["id"],
+        },
       ],
       order: [["createdAt", "DESC"]], // 정렬
     });

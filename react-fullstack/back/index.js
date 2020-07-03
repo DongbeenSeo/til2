@@ -6,6 +6,7 @@ const expressSession = require("express-session");
 const dotenv = require("dotenv");
 const passport = require("passport");
 const passportConfig = require("./passport");
+const path = require("path");
 
 const db = require("./models");
 const userAPIRouter = require("./routes/user");
@@ -27,6 +28,12 @@ passportConfig();
  */
 
 app.use(morgan("dev"));
+/**
+ *  / -> front의 주소
+ * 'uploads' => server의주소
+ * front에서 upload경로를 root directory처럼 쓸 수 있다.
+ */
+app.use("/", express.static("uploads"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(

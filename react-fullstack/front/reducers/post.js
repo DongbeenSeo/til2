@@ -87,6 +87,7 @@ const reducer = (state = initState, action) => {
         isAddingPost: false,
         mainPosts: [action.data, ...state.mainPosts],
         postAdded: true,
+        imagePaths: [],
       };
     }
     case ADD_POST_FAILURE: {
@@ -94,6 +95,66 @@ const reducer = (state = initState, action) => {
         ...state,
         isAddingPost: false,
         addPostErrorReason: action.error,
+      };
+    }
+    case LIKE_POST_REQUEST: {
+      return {
+        ...state,
+      };
+    }
+    case LIKE_POST_SUCCESS: {
+      console.log(
+        `postId: ${JSON.stringify(
+          action,
+          null,
+          4
+        )} LIKE_POST_SUCCESS ${JSON.stringify(state.mainPosts, null, 4)}`
+      );
+      const postIndex = state.mainPosts.findIndex(
+        (v) => v.id === action.data.postId
+      );
+      const post = state.mainPosts[postIndex];
+      const Likers = [{ id: action.data.userId }, ...post.Likers];
+      const mainPosts = [...state.mainPosts];
+      mainPosts[postIndex] = { ...post, Likers };
+      return {
+        ...state,
+        mainPosts,
+      };
+    }
+    case LIKE_POST_FAILURE: {
+      return {
+        ...state,
+      };
+    }
+    case UNLIKE_POST_REQUEST: {
+      return {
+        ...state,
+      };
+    }
+    case UNLIKE_POST_SUCCESS: {
+      console.log(
+        `postId: ${JSON.stringify(
+          action,
+          null,
+          4
+        )} UNLIKE_POST_SUCCESS ${JSON.stringify(state.mainPosts, null, 4)}`
+      );
+      const postIndex = state.mainPosts.findIndex(
+        (v) => v.id === action.data.postId
+      );
+      const post = state.mainPosts[postIndex];
+      const Likers = post.Likers.filter((v) => v.id !== action.data.userId);
+      const mainPosts = [...state.mainPosts];
+      mainPosts[postIndex] = { ...post, Likers };
+      return {
+        ...state,
+        mainPosts,
+      };
+    }
+    case UNLIKE_POST_FAILURE: {
+      return {
+        ...state,
       };
     }
     case LOAD_MAIN_POSTS_REQUEST:
@@ -162,6 +223,30 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         mainPosts,
+      };
+    }
+    case UPLOAD_IMAGES_REQUEST: {
+      return {
+        ...state,
+      };
+    }
+    case UPLOAD_IMAGES_SUCCESS: {
+      return {
+        ...state,
+        imagePaths: [...state.imagePaths, ...action.data],
+      };
+    }
+    case UPLOAD_IMAGES_FAILURE: {
+      return {
+        ...state,
+      };
+    }
+    case REMOVE_IMAGE: {
+      return {
+        ...state,
+        imagePaths: state.imagePaths.filter(
+          (value, index) => index !== action.index
+        ),
       };
     }
     default: {

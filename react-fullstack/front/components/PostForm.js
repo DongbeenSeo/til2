@@ -1,7 +1,12 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Form, Input, Button } from "antd";
 import { useSelector, useDispatch } from "react-redux";
-import { ADD_POST_REQUEST } from "../reducers/post";
+import {
+  ADD_POST_REQUEST,
+  UPLOAD_IMAGES_REQUEST,
+  REMOVE_IMAGE,
+} from "../reducers/post";
+import { useRef } from "react";
 
 const PostForm = () => {
   const dispatch = useDispatch();
@@ -10,6 +15,8 @@ const PostForm = () => {
   const { imagePaths, isAddingPost, postAdded } = useSelector((state) => {
     return state.post;
   });
+
+  const imageInput = useRef();
 
   useEffect(() => {
     if (postAdded) {
@@ -20,24 +27,50 @@ const PostForm = () => {
   const onSubmitForm = useCallback(
     (e) => {
       e.preventDefault();
-      // 없으면 form에서 페이지 reloading이 된다.
+      // 없으면 form event에서 페이지 reloading이 된다.
+      const formData = new FormData();
+      imagePaths.forEach((value, index) => {
+        formData.append("image", value);
+      });
+      formData.append("content", text);
       if (!text || !text.trim()) {
         return alert("게시글을 작성해주세요.");
       }
       console.log(`onSubmit Post: ${text}`);
       dispatch({
         type: ADD_POST_REQUEST,
-        data: {
-          content: text.trim(),
-        },
+        data: formData,
       });
     },
-    [text]
+    [text, imagePaths]
   );
 
   const onChangeText = useCallback((e) => {
     setText(e.target.value);
   }, []);
+
+  const onChangeImages = useCallback((e) => {
+    console.log(e.target.files);
+    const imageFormData = new FormData();
+    [].forEach.call(e.target.files, (f) => {
+      imageFormData.append("image", f);
+    });
+    dispatch({
+      type: UPLOAD_IMAGES_REQUEST,
+      data: imageFormData,
+    });
+  }, []);
+
+  const onClickImageUpload = useCallback(() => {
+    imageInput.current.click();
+  }, [imageInput.current]);
+
+  const onRemoveImage = useCallback((index) => () => {
+    dispatch({
+      type: REMOVE_IMAGE,
+      index,
+    });
+  });
 
   return (
     <div>
@@ -52,8 +85,14 @@ const PostForm = () => {
           onChange={onChangeText}
         />
         <div>
-          <Input type="file" multiple hidden />
-          <Button>이미지 업로드</Button>
+          <input
+            type="file"
+            multiple
+            hidden
+            ref={imageInput}
+            onChange={onChangeImages}
+          />
+          <Button onClick={onClickImageUpload}>이미지 업로드</Button>
           <Button
             type="primary"
             style={{ float: "right" }}
@@ -67,11 +106,19 @@ const PostForm = () => {
             <div
               key={index}
               style={{
-                maxWidth: "300px",
-                margin: "0 auto",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
               }}>
-              <img src={value} alt={value} style={{ maxWidth: "100%" }} />
-              <Button>제거</Button>
+              <div style={{ width: "300px" }}>
+                <img
+                  src={`http://localhost:3066/${value}`}
+                  alt={value}
+                  style={{ maxWidth: "100%" }}
+                />
+              </div>
+              <Button onClick={onRemoveImage(index)}>제거</Button>
             </div>
           ))}
         </div>

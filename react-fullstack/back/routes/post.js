@@ -1,9 +1,36 @@
 const express = require("express");
+const multer = require("multer");
+const path = require("path");
+
 const router = express.Router();
 const db = require("../models");
 const { isLoggedIn } = require("./middleware");
 
-router.post("/", isLoggedIn, async (req, res, next) => {
+const upload = multer({
+  // server storage에 저장 유무
+  storage: multer.diskStorage({
+    destination(req, file, callback) {
+      callback(null, "uploads");
+    },
+    filename(req, file, callback) {
+      const ext = path.extname(file.originalname);
+      const basename = path.basename(file.originalname, ext);
+      // ex) image.png, ext === .png, basename === image
+      // ext는 extension, 확장자
+      callback(null, basename + new Date().valueOf() + ext);
+    },
+  }),
+  limits: { fileSize: 20 * 1024 * 1024 },
+});
+
+/**
+ * formData file -> req.file(s);
+ * formData text -> req.body
+ *
+ * image upload기능이 필요하지 않기 때문에 upload.none()
+ */
+
+router.post("/", isLoggedIn, upload.none(), async (req, res, next) => {
   // POST /api/post
   // console.log(`POST /api/post`);
   try {
@@ -30,6 +57,21 @@ router.post("/", isLoggedIn, async (req, res, next) => {
        * db의 relation을 정의해두면 (hasMany, belongsToMany ...) sequelize에서 생성된다.
        */
     }
+    if (req.body.image) {
+      // 이미지 주소를 여러개 올리면 image: [addr1, addr2]
+      console.log(`req.body: ${JSON.stringify(req.body, null, 4)}`);
+      if (Array.isArray(req.body.image)) {
+        const images = await Promise.all(
+          req.body.image.map((img) => {
+            return db.Image.create({ src: img });
+          })
+        );
+        await newPost.addImages(images);
+      } else {
+        const image = await db.Image.create({ src: req.body.image });
+        await newPost.addImage(image);
+      }
+    }
     /**
      * const User = await newPost.getUser();
      * newPost.User = User;
@@ -44,6 +86,14 @@ router.post("/", isLoggedIn, async (req, res, next) => {
           model: db.User,
           attributes: ["id", "nickname"],
         },
+        {
+          model: db.Image,
+        },
+        {
+          model: db.User,
+          as: "Likers",
+          attributes: ["id"],
+        },
       ],
     });
     res.json(fullPost);
@@ -53,7 +103,10 @@ router.post("/", isLoggedIn, async (req, res, next) => {
   }
 });
 
-router.post("/images", (req, res) => {});
+//upload.array('name') -> name은 front에서 Formdata에 append하는 name을 입력
+router.post("/images", upload.array("image"), (req, res) => {
+  res.json(req.files.map((value) => value.filename));
+});
 
 router.get("/:id/comments", async (req, res, next) => {
   try {
@@ -109,5 +162,51 @@ router.post("/:id/comment", isLoggedIn, async (req, res, next) => {
     next(e);
   }
 });
+
+router.post("/:id/like", isLoggedIn, async (req, res, next) => {
+  try {
+    const post = await db.Post.findOne({
+      where: {
+        id: req.params.id,
+      },
+    });
+    if (!post) {
+      return res.status(404).send("포스트가 존재 하지 않습니다.");
+    }
+    console.log(`like post: ${JSON.stringify(req.user.toJSON())}`);
+    await post.addLiker(req.user.id);
+    res.json({ userId: req.user.id });
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
+
+router.delete("/:id/like", isLoggedIn, async (req, res, next) => {
+  try {
+    const post = await db.Post.findOne({
+      where: {
+        id: req.params.id,
+      },
+    });
+    if (!post) {
+      return res.status(404).send("포스트가 존재 하지 않습니다.");
+    }
+    console.log(`unlike post: ${JSON.stringify(req.user.toJSON())}`);
+    await post.removeLiker(req.user.id);
+    res.json({ userId: req.user.id });
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
+
+// router.post("/:id/like", isLoggedIn, async (req, res, next) => {
+//   try {
+//   } catch (e) {
+//     console.error(e);
+//     next(e);
+//   }
+// });
 
 module.exports = router;

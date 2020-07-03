@@ -20,6 +20,20 @@ router.get("/", async (req, res, next) => {
           as: "Likers",
           attributes: ["id"],
         },
+        {
+          model: db.Post,
+          as: "Retweet",
+          include: [
+            {
+              model: db.User,
+              attributes: ["id", "nickname"],
+            },
+            {
+              model: db.Image,
+            },
+          ],
+        },
+        // include남용은 성능 저하의 요인이 될 수 있다.
       ],
       order: [["createdAt", "DESC"]], // 정렬
     });

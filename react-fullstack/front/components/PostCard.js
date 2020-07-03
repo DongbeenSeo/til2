@@ -1,5 +1,15 @@
 import React, { useCallback, useEffect } from "react";
-import { Card, Icon, Avatar, Form, List, Input, Button, Comment } from "antd";
+import {
+  Card,
+  Icon,
+  Avatar,
+  Form,
+  List,
+  Input,
+  Button,
+  Comment,
+  Popover,
+} from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import Link from "next/link";
@@ -9,9 +19,11 @@ import {
   LOAD_COMMENTS_REQUEST,
   UNLIKE_POST_REQUEST,
   LIKE_POST_REQUEST,
+  RETWEET_REQUEST,
 } from "../reducers/post";
 import { dateFormat } from "../utils";
 import PostImages from "./PostImages";
+import PostCardContent from "./PostCardContent";
 
 const PostCard = ({ post }) => {
   const [commentFormOpened, setCommentFormOpened] = useState(false);
@@ -78,13 +90,25 @@ const PostCard = ({ post }) => {
     }
   }, [me && me.id, post && post.id, liked]);
 
+  const onRetweet = useCallback(() => {
+    if (!me) {
+      return alert("로그인이 필요합니다!");
+    }
+    return dispatch({
+      type: RETWEET_REQUEST,
+      data: post.id,
+    });
+  }, [me && me.id, post && post.id]);
+
   return (
     <div style={{ marginBottom: "10px" }}>
       <Card
         key={post.createdAt}
-        cover={post.Images[0] && <PostImages images={post.Images} />}
+        cover={
+          post.Images && post.Images[0] && <PostImages images={post.Images} />
+        }
         actions={[
-          <Icon type="retweet" key="retweet" />,
+          <Icon type="retweet" key="retweet" onClick={onRetweet} />,
           <Icon
             type="heart"
             key="heart"
@@ -93,47 +117,82 @@ const PostCard = ({ post }) => {
             onClick={onToggleLike}
           />,
           <Icon type="message" key="message" onClick={onToggleComment} />,
-          <Icon type="ellipsis" key="ellipsis" />,
-        ]}>
-        <Card.Meta
-          avatar={
-            <Link
-              // href={`/user/${post.User.id}`} 해당 url은 서버주소이기 때문에 화면 re-rendering이 발생하기 때문에 front주소로 바꿔야한다.
-              href={{ pathname: "/user", query: { id: post.User.id } }}
-              as={`/user/${post.User.id}`}>
-              <a>
-                <Avatar>{post.User.nickname[0]}</Avatar>
-              </a>
-            </Link>
-          }
-          title={
-            <span>
-              {post.User.nickname}&nbsp;
-              <span style={{ fontSize: 12 }}>{dateFormat(post.createdAt)}</span>
-            </span>
-          }
-          description={
-            // 게시글의 hashtag를 a tag가 아니라 next의 Link로
-            <div>
-              {post.content.split(/(#[^\s]+)/g).map((v) => {
-                if (v.match(/#[^\s]+/)) {
-                  return (
-                    <Link
-                      key={v}
-                      href={{
-                        pathname: "/hashtag",
-                        query: { tag: v.slice(1) },
-                      }}
-                      as={`/hashtag/${v.slice(1)}`}>
-                      <a>{v}</a>
-                    </Link>
-                  );
-                }
-                return v;
-              })}
-            </div>
-          }
-        />
+          <Popover
+            key="ellipsis"
+            content={
+              <Button.Group>
+                {me && post.UserId === me.id ? (
+                  <>
+                    <Button>수정</Button>
+                    <Button type="danger">삭제</Button>
+                  </>
+                ) : (
+                  <Button>신고</Button>
+                )}
+              </Button.Group>
+            }>
+            <Icon type="ellipsis" key="ellipsis" />
+          </Popover>,
+        ]}
+        extra={<Button>팔로우</Button>}
+        title={
+          post.RetweetId ? `${post.User.nickname} 님이 리트윗하셨습니다.` : null
+        }>
+        {post.RetweetId && post.Retweet ? (
+          <Card
+            cover={
+              post.Retweet.Images &&
+              post.Retweet.Images[0] && (
+                <PostImages images={post.Retweet.Images} />
+              )
+            }>
+            <Card.Meta
+              avatar={
+                <Link
+                  href={{
+                    pathname: "/user",
+                    query: { id: post.Retweet.User.id },
+                  }}
+                  as={`/user/${post.Retweet.User.id}`}>
+                  <a>
+                    <Avatar>{post.Retweet.User.nickname[0]}</Avatar>
+                  </a>
+                </Link>
+              }
+              title={
+                <span>
+                  {post.Retweet.User.nickname}&nbsp;
+                  <span style={{ fontSize: 12 }}>
+                    {dateFormat(post.Retweet.createdAt)}
+                  </span>
+                </span>
+              }
+              description={<PostCardContent post={post.Retweet.content} />}
+            />
+          </Card>
+        ) : (
+          <Card.Meta
+            avatar={
+              <Link
+                // href={`/user/${post.User.id}`} 해당 url은 서버주소이기 때문에 화면 re-rendering이 발생하기 때문에 front주소로 바꿔야한다.
+                href={{ pathname: "/user", query: { id: post.User.id } }}
+                as={`/user/${post.User.id}`}>
+                <a>
+                  <Avatar>{post.User.nickname[0]}</Avatar>
+                </a>
+              </Link>
+            }
+            title={
+              <span>
+                {post.User.nickname}&nbsp;
+                <span style={{ fontSize: 12 }}>
+                  {dateFormat(post.createdAt)}
+                </span>
+              </span>
+            }
+            description={<PostCardContent post={post.content} />}
+          />
+        )}
       </Card>
       {commentFormOpened && (
         <>

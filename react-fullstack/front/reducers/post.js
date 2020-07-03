@@ -133,13 +133,6 @@ const reducer = (state = initState, action) => {
       };
     }
     case UNLIKE_POST_SUCCESS: {
-      console.log(
-        `postId: ${JSON.stringify(
-          action,
-          null,
-          4
-        )} UNLIKE_POST_SUCCESS ${JSON.stringify(state.mainPosts, null, 4)}`
-      );
       const postIndex = state.mainPosts.findIndex(
         (v) => v.id === action.data.postId
       );
@@ -153,6 +146,22 @@ const reducer = (state = initState, action) => {
       };
     }
     case UNLIKE_POST_FAILURE: {
+      return {
+        ...state,
+      };
+    }
+    case RETWEET_REQUEST: {
+      return {
+        ...state,
+      };
+    }
+    case RETWEET_SUCCESS: {
+      return {
+        ...state,
+        mainPosts: [action.data, ...state.mainPosts],
+      };
+    }
+    case RETWEET_FAILURE: {
       return {
         ...state,
       };

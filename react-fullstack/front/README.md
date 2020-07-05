@@ -37,6 +37,12 @@ reducer의 return값은 항상 불변성을 유지, react에서는 이전 state�
 react Class Component -> connect
 react Function Component -> hooks(useDispatch, useEffect)
 
+### - Issue
+
+해당 reducer에서 발생한 액션으로 다른 reducer의 액션을 발생시키기 어렵다.
+Ex) post를 생성하면 글목록은 user reducer에 들어 있음으로 post reducer에서 user reducer의 액션을
+하나 실행시켜줘야 한다. 이를 위해 post saga에서 user reducer의 data를 바꿔주는 action을 실행 시켜준다.(ADD_POST_TO_ME)
+
 ### 1. redux devtools error
 
 ReferenceError: window is not defined 발생시
@@ -71,6 +77,8 @@ function* generator(){
 
 로그인상태를 예를 들어 SPA에서 화면이 리로딩될때 로그인 상태를 받아오기 전까지
 미로그인 상태를 가려주기 위해 back-end 에서 처리하는 기술
+
+
 
 # Back-end
 

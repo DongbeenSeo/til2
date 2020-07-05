@@ -47,6 +47,7 @@ import {
   UNFOLLOW_USER_SUCCESS,
   UNFOLLOW_USER_FAILURE,
   UNFOLLOW_USER_REQUEST,
+  ADD_POST_TO_ME,
 } from "../reducers/user";
 
 function addPostAPI(postData) {
@@ -59,8 +60,12 @@ function* addPost(action) {
   try {
     const result = yield call(addPostAPI, action.data);
     yield put({
-      type: ADD_POST_SUCCESS,
+      type: ADD_POST_SUCCESS, //post reducer에 속해 있는 액션
       data: result.data,
+    });
+    yield put({
+      type: ADD_POST_TO_ME, //user reducer의 data를 수정
+      data: result.data.id,
     });
   } catch (err) {
     console.error(err);

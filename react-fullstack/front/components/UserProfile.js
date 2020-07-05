@@ -19,17 +19,17 @@ const UserProfile = () => {
           <div key="twit">
             twit
             <br />
-            {me.post}
+            {me.Posts && me.Posts.length}
           </div>,
           <div key="following">
             following
             <br />
-            {me.following}
+            {me.Followings && me.Followings.length}
           </div>,
           <div key="follower">
             follower
             <br />
-            {me.follower}
+            {me.Followers && me.Followers.length}
           </div>,
         ]}>
         <Card.Meta

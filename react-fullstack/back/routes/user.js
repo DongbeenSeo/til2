@@ -7,12 +7,32 @@ const { isLoggedIn } = require("./middleware");
 
 const router = express.Router();
 
-router.get("/", isLoggedIn, (req, res) => {
+router.get("/", isLoggedIn, async (req, res) => {
   // loadUser
 
-  const user = Object.assign({}, req.user.toJSON());
-  delete user.password;
-  return res.json(user);
+  // const user = Object.assign({}, req.user.toJSON());
+  const fullUser = await db.User.findOne({
+    where: { id: req.user.id },
+    include: [
+      {
+        model: db.Post,
+        as: "Posts",
+        attributes: ["id"],
+      },
+      {
+        model: db.User,
+        as: "Followings",
+        attributes: ["id"],
+      },
+      {
+        model: db.User,
+        as: "Followers",
+        attributes: ["id"],
+      },
+    ],
+    attributes: ["id", "nickname", "userId"],
+  });
+  return res.json(fullUser);
 });
 
 router.post("/", async (req, res, next) => {

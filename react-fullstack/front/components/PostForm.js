@@ -113,7 +113,7 @@ const PostForm = () => {
               }}>
               <div style={{ width: "300px" }}>
                 <img
-                  src={`http://localhost:3066/${value}`}
+                  src={`http://localhost:3065/${value}`}
                   alt={value}
                   style={{ maxWidth: "100%" }}
                 />

@@ -74,6 +74,6 @@ app.use("/api/post", postAPIRouter);
 app.use("/api/posts", postsAPIRouter);
 app.use("/api/hashtag", hashtagAPIRouter);
 
-app.listen(3066, () => {
+app.listen(3065, () => {
   console.log("server is running on localhost:3065");
 });

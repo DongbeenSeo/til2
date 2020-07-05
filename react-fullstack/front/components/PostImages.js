@@ -4,7 +4,7 @@ import ImagesZoom from "./ImagesZoom";
 
 const PostImages = ({ images }) => {
   const imageSource = (path) => {
-    return `http://localhost:3066/${path}`;
+    return `http://localhost:3065/${path}`;
   };
   const [showImagesZoom, setShowImagesZoom] = useState(false);
 

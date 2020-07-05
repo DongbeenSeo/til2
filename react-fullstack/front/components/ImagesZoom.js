@@ -73,7 +73,7 @@ const ImagesZoom = ({ images, onClose }) => {
                     maxWidth: "300px",
                   }}>
                   <img
-                    src={`http://localhost:3066/${value.src}`}
+                    src={`http://localhost:3065/${value.src}`}
                     style={{
                       maxWidth: "300px",
                       margin: "0 auto",

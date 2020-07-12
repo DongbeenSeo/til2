@@ -57,6 +57,11 @@ function User({ id }) {
   );
 }
 
+/**
+ * getInitialProps : server-side rendering 의 핵심
+ * server에 필요한 데이터를 넣어주기 위해 getInitialProps 함수 안에
+ * dispatch함수를 집어 넣어준다.
+ * */
 User.getInitialProps = async (context) => {
   return { id: parseInt(context.query.id, 10) };
 };

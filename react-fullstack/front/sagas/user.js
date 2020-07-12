@@ -156,9 +156,9 @@ function* watchLogOut() {
 
 function loadUserAPI(userId) {
   return axios.get(userId ? `/user/${userId}` : "/user/", {
-    withCredentials: true,
-  });
-}
+    withCredentials: true, // 클라이언트에서 요청 보낼때는 브라우저가 쿠키를 같이 동봉
+  }); // 서버사이드 렌더링일때는, 브라우저와 관계가 없다.
+} // 때문에 직접 쿠키를 넣어줘야 한다.
 
 function* loadUser(action) {
   try {

@@ -4,19 +4,11 @@ import Link from "next/link";
 import LoginForm from "./LoginForm";
 import UserProfile from "./UserProfile";
 import { useSelector, useDispatch } from "react-redux";
-import { LOAD_USER_REQUEST } from "../reducers/user";
 
 const AppLayout = ({ children }) => {
   const { me } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (!me) {
-      dispatch({
-        type: LOAD_USER_REQUEST,
-      });
-    }
-  }, []);
   return (
     <div>
       <Menu mode="horizontal">

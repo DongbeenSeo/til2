@@ -3,12 +3,15 @@ import Head from "next/head";
 import { Provider } from "react-redux";
 import { createStore, compose, applyMiddleware } from "redux";
 import withRedux from "next-redux-wrapper";
+import withReduxSaga from "next-redux-saga";
 import createSagaMiddleware from "redux-saga";
+import axios from "axios";
 
 import AppLayout from "../components/AppLayout";
 
 import reducer from "../reducers";
 import rootSaga from "../sagas";
+import { LOAD_USER_REQUEST } from "../reducers/user";
 
 const NodeBird = ({ Component, store, pageProps }) => {
   return (
@@ -42,10 +45,22 @@ const NodeBird = ({ Component, store, pageProps }) => {
 NodeBird.getInitialProps = async (context) => {
   const { ctx, Component } = context;
   let pageProps = {};
+  const state = ctx.store.getState();
+  const cookie = ctx.isServer ? ctx.req.headers.cookie : "";
+  if (ctx.isServer && cookie) {
+    axios.defaults.headers.Cookie = cookie;
+    // server-side rendering이면 직접 요청에 쿠키를 집어넣어주고
+    // 아니면 브라우저에서 요청에 쿠키를 집어넣어준다.
+  }
+  if (!state.user.me) {
+    ctx.store.dispatch({
+      type: LOAD_USER_REQUEST,
+    });
+  }
   if (Component.getInitialProps) {
-    console.log(ctx);
     pageProps = await Component.getInitialProps(ctx);
   }
+
   return { pageProps };
 };
 
@@ -70,9 +85,9 @@ const configureStore = (initState, options) => {
         );
 
   const store = createStore(reducer, initState, enhancer);
-  sagaMiddleware.run(rootSaga);
+  store.sagaTask = sagaMiddleware.run(rootSaga);
 
   return store;
 };
 
-export default withRedux(configureStore)(NodeBird);
+export default withRedux(configureStore)(withReduxSaga(NodeBird));

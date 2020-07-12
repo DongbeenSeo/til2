@@ -17,11 +17,11 @@ const Home = () => {
   const { me, user } = useSelector((state) => state.user);
   const { mainPosts } = useSelector((state) => state.post);
 
-  useEffect(() => {
-    dispatch({
-      type: LOAD_MAIN_POSTS_REQUEST,
-    });
-  }, []);
+  // useEffect(() => {
+  //   dispatch({
+  //     type: LOAD_MAIN_POSTS_REQUEST,
+  //   });
+  // }, []);
 
   // useEffect(() => {
   // dispatch({
@@ -54,6 +54,22 @@ const Home = () => {
 //     logout: () => dispatch(logoutAction)
 //   };
 // }
+
+/**
+ * context 객체 안에 store라는 객체가 있고 그 안에 dispatch함수가 있다.
+ * store: {
+    dispatch: [Function (anonymous)],
+    subscribe: [Function: subscribe],
+    getState: [Function: getState],
+    replaceReducer: [Function: replaceReducer],
+    [Symbol(observable)]: [Function: observable]
+   }
+ */
+Home.getInitialProps = async (context) => {
+  context.store.dispatch({
+    type: LOAD_MAIN_POSTS_REQUEST,
+  });
+};
 
 export default Home;
 // connect(mapStateToProps, mapDispatchToProps)();

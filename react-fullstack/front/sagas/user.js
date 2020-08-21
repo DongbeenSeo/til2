@@ -295,7 +295,6 @@ function removeFollowerAPI(userId) {
 function* removeFollower(action) {
   try {
     const result = yield call(removeFollowerAPI, action.data);
-    console.log(`removeFollower: ${JSON.stringify(result, null, 4)}`);
     yield put({
       type: REMOVE_FOLLOWER_SUCCESS,
       data: result.data,
@@ -328,7 +327,6 @@ function editNicknameAPI(nickname) {
 function* editNickname(action) {
   try {
     const result = yield call(editNicknameAPI, action.data);
-    console.log(`editNickname: ${JSON.stringify(result, null, 4)}`);
     yield put({
       type: EDIT_NICKNAME_SUCCESS,
       data: result.data,

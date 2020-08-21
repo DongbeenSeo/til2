@@ -244,7 +244,6 @@ function likePostAPI(postId) {
 function* likePost(action) {
   try {
     const result = yield call(likePostAPI, action.data);
-    console.log(`likePost result: ${JSON.stringify(result.data.userId)}`);
     yield put({
       type: LIKE_POST_SUCCESS,
       data: {
@@ -272,7 +271,6 @@ function unlikePostAPI(postId) {
 function* unlikePost(action) {
   try {
     const result = yield call(unlikePostAPI, action.data);
-    console.log(`unlikePost result: ${JSON.stringify(result.data.userId)}`);
     yield put({
       type: UNLIKE_POST_SUCCESS,
       data: {

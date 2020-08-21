@@ -28,7 +28,6 @@ function Hashtag({ tag }) {
  * front와 server에서 모두 실행된다.
  */
 Hashtag.getInitialProps = async (context) => {
-  console.log("hashtag getInitialProps", context.query.tag);
   return { tag: context.query.tag };
 };
 

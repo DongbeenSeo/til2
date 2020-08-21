@@ -36,7 +36,6 @@ const PostForm = () => {
       if (!text || !text.trim()) {
         return alert("게시글을 작성해주세요.");
       }
-      console.log(`onSubmit Post: ${text}`);
       dispatch({
         type: ADD_POST_REQUEST,
         data: formData,
@@ -50,7 +49,6 @@ const PostForm = () => {
   }, []);
 
   const onChangeImages = useCallback((e) => {
-    console.log(e.target.files);
     const imageFormData = new FormData();
     [].forEach.call(e.target.files, (f) => {
       imageFormData.append("image", f);

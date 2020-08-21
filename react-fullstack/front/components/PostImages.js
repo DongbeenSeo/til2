@@ -73,7 +73,9 @@ const PostImages = ({ images }) => {
         </div>
       </div>
 
-      {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
+      {showImagesZoom && (
+        <ImagesZoom key={`images`} images={images} onClose={onClose} />
+      )}
     </>
   );
 };

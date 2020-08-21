@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Form, Input, Button } from "antd";
 import { EDIT_NICKNAME_REQUEST } from "../reducers/user";
@@ -25,6 +25,12 @@ const NickNameEditForm = () => {
     [editedName]
   );
 
+  useEffect(() => {
+    if (me) {
+      setEditedName(me.nickname);
+    }
+  }, []);
+
   return (
     <div>
       <Form
@@ -36,7 +42,7 @@ const NickNameEditForm = () => {
         }}>
         <Input
           addonBefore="닉네임"
-          value={editedName || (me && me.nickname)}
+          value={editedName}
           onChange={onChangeNickname}
         />
         <Button type="primary" htmlType="submit" loading={isEditingNickname}>

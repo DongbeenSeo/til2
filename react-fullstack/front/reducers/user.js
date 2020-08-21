@@ -119,7 +119,6 @@ const reducer = (state = initState, action) => {
       };
     }
     case SIGN_UP_FAILURE: {
-      console.log(`SIGN_UP_FAILURE: ${JSON.stringify(action, null, 4)}`);
       return {
         ...state,
         isSigningUp: false,

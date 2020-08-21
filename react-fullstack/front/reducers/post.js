@@ -103,13 +103,6 @@ const reducer = (state = initState, action) => {
       };
     }
     case LIKE_POST_SUCCESS: {
-      console.log(
-        `postId: ${JSON.stringify(
-          action,
-          null,
-          4
-        )} LIKE_POST_SUCCESS ${JSON.stringify(state.mainPosts, null, 4)}`
-      );
       const postIndex = state.mainPosts.findIndex(
         (v) => v.id === action.data.postId
       );

@@ -7,12 +7,6 @@ function Hashtag({ tag }) {
   const dispatch = useDispatch();
   const { mainPosts } = useSelector((state) => state.post);
 
-  useEffect(() => {
-    dispatch({
-      type: LOAD_HASHTAG_POSTS_REQUEST,
-      data: tag,
-    });
-  }, []);
   return (
     <div>
       {mainPosts.map((value, index) => (
@@ -28,6 +22,11 @@ function Hashtag({ tag }) {
  * front와 server에서 모두 실행된다.
  */
 Hashtag.getInitialProps = async (context) => {
+  const tag = context.query.tag;
+  context.store.dispatch({
+    type: LOAD_HASHTAG_POSTS_REQUEST,
+    data: tag,
+  });
   return { tag: context.query.tag };
 };
 

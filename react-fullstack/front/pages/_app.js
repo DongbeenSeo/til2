@@ -49,8 +49,8 @@ NodeBird.getInitialProps = async (context) => {
   const cookie = ctx.isServer ? ctx.req.headers.cookie : "";
   if (ctx.isServer && cookie) {
     axios.defaults.headers.Cookie = cookie;
-    // server-side rendering이면 직접 요청에 쿠키를 집어넣어주고
-    // 아니면 브라우저에서 요청에 쿠키를 집어넣어준다.
+    // 클라이언트에서 요청을 보낼 때는 브라우저가 쿠키를 같이 동봉
+    // server-side rendering이면 브라우저에서 요청을 보내는 것이 아니라 front서버에서 요청을 보내기 때문에 직접 api요청에 쿠키를 집어넣어야 한다.
   }
   if (!state.user.me) {
     ctx.store.dispatch({

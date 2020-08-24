@@ -261,7 +261,9 @@ function* watchLoadFollowers() {
 // watchLoadFollowings
 
 function loadFollowingsAPI(userId) {
-  return axios.get(`/user/${userId}/followings`, { withCredentials: true });
+  return axios.get(`/user/${userId || 0}/followings`, {
+    withCredentials: true,
+  });
 }
 
 function* loadFollowings(action) {
@@ -287,7 +289,7 @@ function* watchLoadFollowings() {
 
 // watchRemoveFollower
 function removeFollowerAPI(userId) {
-  return axios.delete(`/user/${userId}/follower`, {
+  return axios.delete(`/user/${userId || 0}/follower`, {
     withCredentials: true,
   });
 }

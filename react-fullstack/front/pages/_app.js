@@ -66,7 +66,14 @@ NodeBird.getInitialProps = async (context) => {
 
 const configureStore = (initState, options) => {
   const sagaMiddleware = createSagaMiddleware();
-  const middlewares = [sagaMiddleware];
+  const middlewares = [
+    sagaMiddleware,
+    (store) => (next) => (action) => {
+      console.log(action);
+      next(action);
+    },
+  ];
+  // custom middleware (리덕스 사가의 로그를 나타내어 에러를 찾아낼수 있다.)
 
   // const composeEnhancers =
   //   (typeof window !== 'undefined' &&

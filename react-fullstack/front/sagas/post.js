@@ -109,7 +109,8 @@ function* watchLoadHashtagPosts() {
   yield takeLatest(LOAD_HASHTAG_POSTS_REQUEST, loadHashtagPosts);
 }
 function loadHashtagPostsAPI(tag) {
-  return axios.get(`/hashtag/${tag}`);
+  return axios.get(`/hashtag/${encodeURIComponent(tag)}`);
+  // 한글인 경우 오류발생, front에서는 encode, back에서는 decode
 }
 
 function* loadHashtagPosts(action) {
@@ -134,7 +135,7 @@ function* watchLoadUserPosts() {
 }
 
 function loadUserPostsAPI(id) {
-  return axios.get(`/user/${id}/posts`);
+  return axios.get(`/user/${id || 0}/posts`);
 }
 
 function* loadUserPosts(action) {

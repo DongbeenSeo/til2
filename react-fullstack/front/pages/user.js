@@ -7,21 +7,11 @@ import { LOAD_USER_REQUEST } from "../reducers/user";
 
 import PostCard from "../components/PostCard";
 
-function User({ id }) {
+function User() {
   const dispatch = useDispatch();
   const { mainPosts } = useSelector((state) => state.post);
   const { userInfo } = useSelector((state) => state.user);
 
-  useEffect(() => {
-    dispatch({
-      type: LOAD_USER_REQUEST,
-      data: id,
-    });
-    dispatch({
-      type: LOAD_USER_POSTS_REQUEST,
-      data: id,
-    });
-  }, []);
   return (
     <div>
       {userInfo ? (
@@ -63,6 +53,15 @@ function User({ id }) {
  * dispatch함수를 집어 넣어준다.
  * */
 User.getInitialProps = async (context) => {
+  const id = parseInt(context.query.id);
+  context.store.dispatch({
+    type: LOAD_USER_REQUEST,
+    data: id,
+  });
+  context.store.dispatch({
+    type: LOAD_USER_POSTS_REQUEST,
+    data: id,
+  });
   return { id: parseInt(context.query.id, 10) };
 };
 

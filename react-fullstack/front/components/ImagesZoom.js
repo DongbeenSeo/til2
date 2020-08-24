@@ -65,9 +65,10 @@ const ImagesZoom = ({ images, onClose }) => {
         }}>
         <div>
           <Slick {...settings}>
-            {images.map((value) => {
+            {images.map((value, index) => {
               return (
                 <div
+                  key={index}
                   style={{
                     textAlign: "center",
                     maxWidth: "300px",

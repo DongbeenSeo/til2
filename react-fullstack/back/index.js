@@ -20,6 +20,11 @@ const app = express();
 passportConfig();
 
 /**
+ * DB 생성 명령어
+ * npx sequelize db:create
+ */
+
+/**
  * get: 조회
  * post: 생성
  * put: 부분수정
@@ -74,6 +79,6 @@ app.use("/api/post", postAPIRouter);
 app.use("/api/posts", postsAPIRouter);
 app.use("/api/hashtag", hashtagAPIRouter);
 
-app.listen(3065, () => {
-  console.log("server is running on localhost:3065");
+app.listen(process.env.PORT, () => {
+  console.log(`server is running on localhost:${process.env.PORT}`);
 });

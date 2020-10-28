@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Slick from "react-slick";
-
 import { Icon } from "antd";
+import Const from '../const'
 
 const ImagesZoom = ({ images, onClose }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -74,7 +74,7 @@ const ImagesZoom = ({ images, onClose }) => {
                     maxWidth: "300px",
                   }}>
                   <img
-                    src={`http://localhost:3065/${value.src}`}
+                    src={`http://localhost:${Const.port}/${value.src}`}
                     style={{
                       maxWidth: "300px",
                       margin: "0 auto",

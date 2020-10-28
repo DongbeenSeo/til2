@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Form, Input, Button } from "antd";
 import { useSelector, useDispatch } from "react-redux";
+import { useRef } from "react";
+
 import {
   ADD_POST_REQUEST,
   UPLOAD_IMAGES_REQUEST,
   REMOVE_IMAGE,
 } from "../reducers/post";
-import { useRef } from "react";
+import Const from '../const'
 
 const PostForm = () => {
   const dispatch = useDispatch();
@@ -53,6 +55,7 @@ const PostForm = () => {
     [].forEach.call(e.target.files, (f) => {
       imageFormData.append("image", f);
     });
+    console.log('imageFormData' + JSON.stringify(imageFormData))
     dispatch({
       type: UPLOAD_IMAGES_REQUEST,
       data: imageFormData,
@@ -111,7 +114,7 @@ const PostForm = () => {
               }}>
               <div style={{ width: "300px" }}>
                 <img
-                  src={`http://localhost:3065/${value}`}
+                  src={`http://localhost:${Const.port}/${value}`}
                   alt={value}
                   style={{ maxWidth: "100%" }}
                 />

@@ -1,10 +1,11 @@
 import React, { useState, useCallback } from "react";
 import { Icon } from "antd";
 import ImagesZoom from "./ImagesZoom";
+import Const from '../const'
 
 const PostImages = ({ images }) => {
   const imageSource = (path) => {
-    return `http://localhost:3065/${path}`;
+    return `http://localhost:${Const.port}/${path}`;
   };
   const [showImagesZoom, setShowImagesZoom] = useState(false);
 

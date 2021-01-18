@@ -107,6 +107,22 @@ router.post("/images", upload.array("image"), (req, res) => {
   res.json(req.files.map((value) => value.filename));
 });
 
+router.delete("/:id", isLoggedIn, async (req, res, next) => {
+  try {
+    // 게시글 가져오는 query를 middleware로 묶어보기!
+    const post = await db.Post.findOne({ where: { id: req.params.id } });
+    // 게시글 관련 api는 게시글 유무 체크
+    if (!post) {
+      return res.status(404).send("not exist post");
+    }
+    await db.Post.destroy({ where: { id: req.params.id } });
+    res.send(req.params.id);
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
+
 router.get("/:id/comments", async (req, res, next) => {
   try {
     const post = await db.Post.findOne({ where: { id: req.params.id } });

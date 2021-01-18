@@ -143,22 +143,6 @@ const reducer = (state = initState, action) => {
         ...state,
       };
     }
-    case RETWEET_REQUEST: {
-      return {
-        ...state,
-      };
-    }
-    case RETWEET_SUCCESS: {
-      return {
-        ...state,
-        mainPosts: [action.data, ...state.mainPosts],
-      };
-    }
-    case RETWEET_FAILURE: {
-      return {
-        ...state,
-      };
-    }
     case LOAD_MAIN_POSTS_REQUEST:
     case LOAD_HASHTAG_POSTS_REQUEST:
     case LOAD_USER_POSTS_REQUEST: {
@@ -249,6 +233,38 @@ const reducer = (state = initState, action) => {
         imagePaths: state.imagePaths.filter(
           (value, index) => index !== action.index
         ),
+      };
+    }
+    case RETWEET_REQUEST: {
+      return {
+        ...state,
+      };
+    }
+    case RETWEET_SUCCESS: {
+      return {
+        ...state,
+        mainPosts: [action.data, ...state.mainPosts],
+      };
+    }
+    case RETWEET_FAILURE: {
+      return {
+        ...state,
+      };
+    }
+    case REMOVE_POST_REQUEST: {
+      return {
+        ...state,
+      };
+    }
+    case REMOVE_POST_SUCCESS: {
+      return {
+        ...state,
+        mainPosts: state.mainPosts.filter((v) => v.id !== action.data),
+      };
+    }
+    case REMOVE_POST_FAILURE: {
+      return {
+        ...state,
       };
     }
     default: {

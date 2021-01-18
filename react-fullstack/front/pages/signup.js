@@ -89,6 +89,10 @@ const signup = () => {
     setTerm(e.target.checked);
   }, []);
 
+  if (me) {
+    return null;
+  }
+
   return (
     <div style={{ padding: 10 }}>
       <div style={{ fontSize: 18, fontWeight: "bold" }}>회원가입</div>

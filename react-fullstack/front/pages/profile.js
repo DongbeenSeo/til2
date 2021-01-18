@@ -91,8 +91,10 @@ const Profile = () => {
   );
 };
 
+//SSR로 데이터 세팅
 Profile.getInitialProps = async (context) => {
   const state = context.store.getState();
+  // 이 직전에 LOAD_USER_REQUEST
   console.log(`Profile.getIniitalProps`, context);
   context.store.dispatch({
     type: LOAD_FOLLOWERS_REQUEST,
@@ -106,5 +108,6 @@ Profile.getInitialProps = async (context) => {
     type: LOAD_USER_POSTS_REQUEST,
     data: state.user.me && state.user.me.id,
   });
+  // 이 쯤에서 LOAD_USER_SUCCESS가 돼서 me가 생김.
 };
 export default Profile;

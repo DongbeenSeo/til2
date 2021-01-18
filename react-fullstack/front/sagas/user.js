@@ -233,8 +233,11 @@ function* watchUnFollow() {
 
 // watchLoadFollowers
 
-function loadFollowersAPI(userId) {
-  return axios.get(`/user/${userId}/followers`, { withCredentials: true });
+function loadFollowersAPI(userId, offset = 0, limit = 3) {
+  return axios.get(
+    `/user/${userId || 0}/followers?offset=${offset}&limit=${limit}`,
+    { withCredentials: true }
+  );
 }
 
 function* loadFollowers(action) {
@@ -260,10 +263,13 @@ function* watchLoadFollowers() {
 
 // watchLoadFollowings
 
-function loadFollowingsAPI(userId) {
-  return axios.get(`/user/${userId || 0}/followings`, {
-    withCredentials: true,
-  });
+function loadFollowingsAPI(userId, offset = 0, limit = 3) {
+  return axios.get(
+    `/user/${userId || 0}/followings?offset=${offset}&limit=${limit}`,
+    {
+      withCredentials: true,
+    }
+  );
 }
 
 function* loadFollowings(action) {

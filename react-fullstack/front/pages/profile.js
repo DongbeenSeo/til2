@@ -39,6 +39,18 @@ const Profile = () => {
     []
   );
 
+  const loadMoreFollowings = useCallback(() => {
+    dispatch({
+      type: LOAD_FOLLOWINGS_REQUEST,
+    });
+  }, []);
+
+  const loadMoreFollowers = useCallback(() => {
+    dispatch({
+      type: LOAD_FOLLOWERS_REQUEST,
+    });
+  }, []);
+
   return (
     <div>
       <NickNameEditForm />
@@ -47,7 +59,11 @@ const Profile = () => {
         grid={{ gutter: 4, xs: 2, md: 3 }}
         size="small"
         header={<div>팔로잉 목록</div>}
-        loadMore={<Button style={{ width: "100%" }}>더 보기</Button>}
+        loadMore={
+          <Button style={{ width: "100%" }} onClick={loadMoreFollowings}>
+            더 보기
+          </Button>
+        }
         dataSource={followingList}
         renderItem={(item) => (
           <List.Item style={{ marginTop: 20 }}>
@@ -65,7 +81,11 @@ const Profile = () => {
         grid={{ gutter: 4, xs: 2, md: 3 }}
         size="small"
         header={<div>팔로워 목록</div>}
-        loadMore={<Button style={{ width: "100%" }}>더 보기</Button>}
+        loadMore={
+          <Button style={{ width: "100%" }} onClick={loadMoreFollowers}>
+            더 보기
+          </Button>
+        }
         dataSource={followerList}
         renderItem={(item) => (
           <List.Item style={{ marginTop: 20 }}>

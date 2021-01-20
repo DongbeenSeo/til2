@@ -9,7 +9,16 @@ router.get("/:tag", async (req, res, next) => {
      *  hashtag검색을 post table에서 할 때
      *  where 조건을 post table이 아니라 hashtag를 include하는 구문에 적어야 한다.
      *  */
+    let where = {};
+    if (parseInt(req.query.lastId, 10)) {
+      where = {
+        id: {
+          [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10),
+        },
+      };
+    }
     const posts = await db.Post.findAll({
+      where,
       include: [
         {
           model: db.Hashtag,
@@ -41,6 +50,8 @@ router.get("/:tag", async (req, res, next) => {
           ],
         },
       ],
+      order: [["createdAt", "DESC"]],
+      limit: parseInt(req.query.limit, 10),
     });
     /**
      * hashtag의 내용이 한글이나 주소창에 입력되지 않는 내용일 경우

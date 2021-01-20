@@ -124,7 +124,6 @@ const PostCard = ({ post }) => {
 
   const onRemovePost = useCallback(
     (userId) => () => {
-      console.log(`remove userId: ${userId}`);
       dispatch({
         type: REMOVE_POST_REQUEST,
         data: userId,

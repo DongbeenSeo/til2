@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import PostForm from "../components/PostForm";
 import PostCard from "../components/PostCard";
 import { connect, useDispatch, useSelector } from "react-redux";
@@ -7,15 +7,35 @@ import { LOAD_MAIN_POSTS_REQUEST } from "../reducers/post";
 
 // { dispatch, isLogin, user, login, logout }
 const Home = () => {
-  const dispatch = useDispatch();
-  // useEffect(() => {
-  //   dispatch(loginAction("dongbeen3"));
-  //   dispatch(logoutAction);
-  //   // });
-  // }, []);
-  //input: dependensy parameter에 아무것도 넣지 않으면 componentDidMount와 같다
   const { me, user } = useSelector((state) => state.user);
-  const { mainPosts } = useSelector((state) => state.post);
+  const { mainPosts, hasMorePost } = useSelector((state) => state.post);
+  const dispatch = useDispatch();
+
+  const onScroll = useCallback(() => {
+    /**
+     * window.scrollY : 스크롤 내린 거리
+     * document.documentElement.clientHeight : 화면 높이
+     * document.documentElement.scrollHeight : 전체 화면 높이
+     */
+    if (
+      hasMorePost &&
+      window.scrollY + document.documentElement.clientHeight >
+        document.documentElement.scrollHeight - 100
+    ) {
+      dispatch({
+        type: LOAD_MAIN_POSTS_REQUEST,
+        lastId: mainPosts[mainPosts.length - 1].id,
+      });
+    }
+  }, [hasMorePost, mainPosts.length]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [mainPosts.length]);
+  //input: dependensy parameter에 아무것도 넣지 않으면 componentDidMount와 같다
 
   // useEffect(() => {
   //   dispatch({

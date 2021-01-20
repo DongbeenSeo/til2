@@ -156,7 +156,8 @@ function* watchLogOut() {
 
 function loadUserAPI(userId) {
   return axios.get(userId ? `/user/${userId}` : "/user/", {
-    withCredentials: true, // 클라이언트에서 요청 보낼때는 브라우저가 쿠키를 같이 동봉
+    withCredentials: true,
+    // 클라이언트에서 요청 보낼때는 브라우저가 쿠키를 같이 동봉
   }); // 서버사이드 렌더링일때는, 브라우저와 관계가 없다.
 } // 때문에 직접 쿠키를 넣어줘야 한다.
 
@@ -198,7 +199,6 @@ function* follow(action) {
       type: FOLLOW_USER_FAILURE,
       error: err,
     });
-    alert(err.response.data);
   }
 }
 
@@ -223,7 +223,6 @@ function* unfollow(action) {
       type: UNFOLLOW_USER_FAILURE,
       error: err,
     });
-    alert(err.response.data);
   }
 }
 
@@ -242,7 +241,7 @@ function loadFollowersAPI(userId, offset = 0, limit = 3) {
 
 function* loadFollowers(action) {
   try {
-    const result = yield call(loadFollowersAPI, action.data);
+    const result = yield call(loadFollowersAPI, action.data, action.offset);
     yield put({
       type: LOAD_FOLLOWERS_SUCCESS,
       data: result.data,
@@ -253,7 +252,6 @@ function* loadFollowers(action) {
       type: LOAD_FOLLOWERS_FAILURE,
       error: err,
     });
-    alert(err.response.data);
   }
 }
 
@@ -274,7 +272,7 @@ function loadFollowingsAPI(userId, offset = 0, limit = 3) {
 
 function* loadFollowings(action) {
   try {
-    const result = yield call(loadFollowingsAPI, action.data);
+    const result = yield call(loadFollowingsAPI, action.data, action.offset);
     yield put({
       type: LOAD_FOLLOWINGS_SUCCESS,
       data: result.data,
@@ -285,7 +283,6 @@ function* loadFollowings(action) {
       type: LOAD_FOLLOWINGS_FAILURE,
       error: err,
     });
-    alert(err.response.data);
   }
 }
 
@@ -313,7 +310,6 @@ function* removeFollower(action) {
       type: REMOVE_FOLLOWER_FAILURE,
       error: err,
     });
-    alert(err);
   }
 }
 
@@ -345,7 +341,6 @@ function* editNickname(action) {
       type: EDIT_NICKNAME_FAILURE,
       error: err,
     });
-    alert(err);
   }
 }
 

@@ -6,6 +6,7 @@ import {
   takeLatest,
   takeEvery,
   call,
+  throttle,
 } from "redux-saga/effects";
 import {
   ADD_POST_SUCCESS,
@@ -86,15 +87,15 @@ function* watchAddPost() {
 
 // watchLoadMainPosts
 function* watchLoadMainPosts() {
-  yield takeLatest(LOAD_MAIN_POSTS_REQUEST, loadMainPosts);
+  yield throttle(2000, LOAD_MAIN_POSTS_REQUEST, loadMainPosts);
 }
-function loadMainPostsAPI(postData) {
-  return axios.get("/posts");
+function loadMainPostsAPI(lastId = 0, limit = 10) {
+  return axios.get(`/posts?lastId=${lastId}&limit=${limit}`);
 }
 
 function* loadMainPosts(action) {
   try {
-    const result = yield call(loadMainPostsAPI);
+    const result = yield call(loadMainPostsAPI, action.lastId);
     yield put({
       type: LOAD_MAIN_POSTS_SUCCESS,
       data: result.data,
@@ -110,16 +111,18 @@ function* loadMainPosts(action) {
 
 // watchLoadHashtagPosts
 function* watchLoadHashtagPosts() {
-  yield takeLatest(LOAD_HASHTAG_POSTS_REQUEST, loadHashtagPosts);
+  yield throttle(2000, LOAD_HASHTAG_POSTS_REQUEST, loadHashtagPosts);
 }
-function loadHashtagPostsAPI(tag) {
-  return axios.get(`/hashtag/${encodeURIComponent(tag)}`);
+function loadHashtagPostsAPI(tag, lastId = 0) {
+  return axios.get(
+    `/hashtag/${encodeURIComponent(tag)}?lastId=${lastId}&limit=10`
+  );
   // 한글인 경우 오류발생, front에서는 encode, back에서는 decode
 }
 
 function* loadHashtagPosts(action) {
   try {
-    const result = yield call(loadHashtagPostsAPI, action.data);
+    const result = yield call(loadHashtagPostsAPI, action.data, action.lastId);
     yield put({
       type: LOAD_HASHTAG_POSTS_SUCCESS,
       data: result.data,
@@ -314,7 +317,6 @@ function* retweet(action) {
       type: RETWEET_FAILURE,
       error: err,
     });
-    alert(err.response.data);
   }
 }
 

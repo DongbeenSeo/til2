@@ -49,11 +49,13 @@ const initState = {
   isSigningUp: false, // 회원가입 시도중
   signUpErrorReason: "", //회원가입 실패 사유
   me: null, // 내정보
-  follwingList: [], // 팔로잉 리스트
-  follwerList: [], // 팔로워 리스트
+  followingList: [], // 팔로잉 리스트
+  followerList: [], // 팔로워 리스트
   userInfo: null, // 남의 정보
   isEditingNickname: false, // 이름 변경 중
   editNicknameErrorReason: "", // 이름 변경 실패 사유
+  hasMoreFollower: false,
+  hasMoreFollowing: false,
 };
 
 // export const logoutAction = {
@@ -191,12 +193,15 @@ const reducer = (state = initState, action) => {
     case LOAD_FOLLOWERS_REQUEST: {
       return {
         ...state,
+        hasMoreFollower: action.offset ? state.hasMoreFollower : true,
+        // 처음 데이터를 가져올 때는 더보기 버튼을 보여주는 걸로
       };
     }
     case LOAD_FOLLOWERS_SUCCESS: {
       return {
         ...state,
-        followerList: action.data,
+        followerList: state.followerList.concat(action.data),
+        hasMoreFollower: Array.isArray(action.data) && action.data.length === 3,
       };
     }
     case LOAD_FOLLOWERS_FAILURE: {
@@ -207,12 +212,15 @@ const reducer = (state = initState, action) => {
     case LOAD_FOLLOWINGS_REQUEST: {
       return {
         ...state,
+        hasMoreFollowing: action.offset ? state.hasMoreFollowing : true,
       };
     }
     case LOAD_FOLLOWINGS_SUCCESS: {
       return {
         ...state,
-        followingList: action.data,
+        followingList: state.followingList.concat(action.data),
+        hasMoreFollowing:
+          Array.isArray(action.data) && action.data.length === 3,
       };
     }
     case LOAD_FOLLOWINGS_FAILURE: {

@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { Icon } from "antd";
 import ImagesZoom from "./ImagesZoom";
-import Const from '../const'
+import Const from "../const";
 
 const PostImages = ({ images }) => {
   const imageSource = (path) => {
@@ -59,7 +59,7 @@ const PostImages = ({ images }) => {
           alignItems: "center",
           justifyContent: "center",
         }}>
-        <img src={imageSource(images[0].src)} style={{ widh: "50%" }} />
+        <img src={imageSource(images[0].src)} style={{ width: "50%" }} />
         <div
           style={{
             display: "inline-block",

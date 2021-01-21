@@ -42,6 +42,9 @@ import {
   REMOVE_POST_SUCCESS,
   REMOVE_POST_FAILURE,
   REMOVE_POST_REQUEST,
+  LOAD_POST_REQUEST,
+  LOAD_POST_SUCCESS,
+  LOAD_POST_FAILURE,
 } from "../reducers/post";
 import axios from "axios";
 import {
@@ -86,6 +89,29 @@ function* watchAddPost() {
 }
 
 // watchLoadMainPosts
+function* watchLoadPost() {
+  yield throttle(2000, LOAD_POST_REQUEST, loadPost);
+}
+function loadPostAPI(postId) {
+  return axios.get(`/post/${postId}`);
+}
+
+function* loadPost(action) {
+  try {
+    const result = yield call(loadPostAPI, action.data);
+    yield put({
+      type: LOAD_POST_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LOAD_POST_FAILURE,
+      error: err,
+    });
+  }
+}
+
 function* watchLoadMainPosts() {
   yield throttle(2000, LOAD_MAIN_POSTS_REQUEST, loadMainPosts);
 }
@@ -356,6 +382,7 @@ export default function* postSaga() {
   yield all([
     fork(watchAddPost),
     fork(watchLoadMainPosts),
+    fork(watchLoadPost),
     fork(watchAddComment),
     fork(watchLoadComments),
     fork(watchLoadHashtagPosts),

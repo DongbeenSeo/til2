@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import PostForm from "../components/PostForm";
 import PostCard from "../components/PostCard";
 import { connect, useDispatch, useSelector } from "react-redux";
@@ -10,6 +10,7 @@ const Home = () => {
   const { me, user } = useSelector((state) => state.user);
   const { mainPosts, hasMorePost } = useSelector((state) => state.post);
   const dispatch = useDispatch();
+  const countRef = useRef([]);
 
   const onScroll = useCallback(() => {
     /**
@@ -17,15 +18,21 @@ const Home = () => {
      * document.documentElement.clientHeight : 화면 높이
      * document.documentElement.scrollHeight : 전체 화면 높이
      */
+
     if (
-      hasMorePost &&
       window.scrollY + document.documentElement.clientHeight >
-        document.documentElement.scrollHeight - 100
+      document.documentElement.scrollHeight - 100
     ) {
-      dispatch({
-        type: LOAD_MAIN_POSTS_REQUEST,
-        lastId: mainPosts[mainPosts.length - 1].id,
-      });
+      if (hasMorePost) {
+        let lastId = mainPosts[mainPosts.length - 1].id;
+        if (!countRef.current.includes(lastId)) {
+          dispatch({
+            type: LOAD_MAIN_POSTS_REQUEST,
+            lastId,
+          });
+        }
+        countRef.current.push(lastId);
+      }
     }
   }, [hasMorePost, mainPosts.length]);
 

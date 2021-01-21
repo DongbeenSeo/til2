@@ -1,11 +1,12 @@
 import React from "react";
-import Head from "next/head";
 import { Provider } from "react-redux";
 import { createStore, compose, applyMiddleware } from "redux";
 import withRedux from "next-redux-wrapper";
 import withReduxSaga from "next-redux-saga";
 import createSagaMiddleware from "redux-saga";
 import axios from "axios";
+import { Helmet } from "react-helmet";
+import { Container } from "next/app";
 
 import AppLayout from "../components/AppLayout";
 
@@ -15,30 +16,72 @@ import { LOAD_USER_REQUEST } from "../reducers/user";
 
 const NodeBird = ({ Component, store, pageProps }) => {
   return (
-    <Provider store={store}>
-      <Head>
-        <title>NodeBird</title>
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.26.12/antd.css"
+    <Container>
+      <Provider store={store}>
+        <Helmet
+          title="NodeBird"
+          htmlAttributes={{ lang: "ko" }}
+          meta={[
+            {
+              charSet: "UTF-8",
+            },
+            {
+              name: "viewport",
+              content: "width=device-width",
+            },
+            {
+              httpEquiv: "X-UA-Compatible",
+              content: "IE=edge",
+            },
+            {
+              name: "description",
+              content: "Nodebird SNS",
+            },
+            {
+              name: "og:title",
+              content: "My SNS",
+            },
+            {
+              name: "og:description",
+              content: "Nodebird SNS",
+            },
+            {
+              property: "og:type",
+              content: "website",
+            },
+          ]}
+          link={[
+            {
+              rel: "stylesheet",
+              href:
+                "https://cdnjs.cloudflare.com/ajax/libs/antd/3.26.12/antd.css",
+            },
+            {
+              rel: "stylesheet",
+              type: "text/css",
+              charSet: "UTF-8",
+              href:
+                "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css",
+            },
+            {
+              rel: "stylesheet",
+              type: "text/css",
+              href:
+                "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css",
+            },
+          ]}
+          script={[
+            {
+              src:
+                "https://cdnjs.cloudflare.com/ajax/libs/antd/3.26.12/antd.js",
+            },
+          ]}
         />
-        <link
-          rel="stylesheet"
-          type="text/css"
-          charSet="UTF-8"
-          href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
-        />
-        <link
-          rel="stylesheet"
-          type="text/css"
-          href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
-        />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/antd/3.26.12/antd.js" />
-      </Head>
-      <AppLayout>
-        <Component {...pageProps} />
-      </AppLayout>
-    </Provider>
+        <AppLayout>
+          <Component {...pageProps} />
+        </AppLayout>
+      </Provider>
+    </Container>
   );
 };
 

@@ -1,13 +1,28 @@
 import React, { useEffect } from "react";
 import { Menu, Input, Button, Row, Col, Card, Avatar } from "antd";
 import Link from "next/link";
+import { useSelector, useDispatch } from "react-redux";
+import Router from "next/router";
+import styled from "styled-components";
+
 import LoginForm from "./LoginForm";
 import UserProfile from "./UserProfile";
-import { useSelector, useDispatch } from "react-redux";
 
 const AppLayout = ({ children }) => {
   const { me } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+
+  const onSearch = (value) => {
+    /**
+     * 동적 라우팅
+     * 내부적으로는 /hashtag
+     * 외부적으로는 /hashtag/%s
+     */
+    Router.push(
+      { pathname: "/hashtag", query: { tag: value } },
+      `/hashtag/${value}`
+    );
+  };
 
   return (
     <div>
@@ -23,7 +38,11 @@ const AppLayout = ({ children }) => {
           </Link>
         </Menu.Item>
         <Menu.Item key="mail">
-          <Input.Search enterButton style={{ verticalAlign: "middle" }} />
+          <Input.Search
+            enterButton
+            onSearch={onSearch}
+            style={{ verticalAlign: "middle" }}
+          />
         </Menu.Item>
       </Menu>
       {/* <Button>

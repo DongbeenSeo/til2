@@ -160,6 +160,7 @@ const reducer = (state = initState, action) => {
       }
 
       case LOAD_FOLLOWERS_REQUEST: {
+        draft.followerList = !action.offset ? [] : draft.followerList;
         draft.hasMoreFollower = action.offset ? state.hasMoreFollower : true;
         break;
         // 처음 데이터를 가져올 때는 더보기 버튼을 보여주는 걸로
@@ -177,6 +178,7 @@ const reducer = (state = initState, action) => {
         break;
       }
       case LOAD_FOLLOWINGS_REQUEST: {
+        draft.followingList = !action.offset ? [] : draft.followingList;
         draft.hasMoreFollowing = action.offset ? state.hasMoreFollowing : true;
         break;
       }

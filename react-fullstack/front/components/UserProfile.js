@@ -26,7 +26,7 @@ const UserProfile = () => {
               </div>
             </a>
           </Link>,
-          <Link href="/profile">
+          <Link href="/profile" prefetch>
             <a>
               <div key="following">
                 following

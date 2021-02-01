@@ -26,3 +26,6 @@ yarn-debug.log*
 yarn-error.log*
 
 /back/uploads
+
+/front/.next
+package-lock.json

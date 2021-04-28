@@ -75,7 +75,7 @@ const initState = {
   addCommentErrorReason: "",
   commentAdded: false,
   hasMorePost: false,
-  singlePost: {},
+  singlePost: {}
 };
 
 const reducer = (state = initState, action) => {
@@ -110,7 +110,7 @@ const reducer = (state = initState, action) => {
         break;
         return {
           ...state,
-          mainPosts,
+          mainPosts
         };
       }
       case LIKE_POST_FAILURE: {
@@ -209,7 +209,7 @@ const reducer = (state = initState, action) => {
       case RETWEET_SUCCESS: {
         return {
           ...state,
-          mainPosts: [action.data, ...state.mainPosts],
+          mainPosts: [action.data, ...state.mainPosts]
         };
       }
       case RETWEET_FAILURE: {
@@ -221,7 +221,7 @@ const reducer = (state = initState, action) => {
       case REMOVE_POST_SUCCESS: {
         return {
           ...state,
-          mainPosts: state.mainPosts.filter((v) => v.id !== action.data),
+          mainPosts: state.mainPosts.filter((v) => v.id !== action.data)
         };
       }
       case REMOVE_POST_FAILURE: {

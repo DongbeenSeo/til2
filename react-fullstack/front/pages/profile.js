@@ -1,16 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { Button, List, Card, Icon } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import NickNameEditForm from "../components/NickNameEditForm";
+
 import {
   LOAD_FOLLOWERS_REQUEST,
   LOAD_FOLLOWINGS_REQUEST,
   UNFOLLOW_USER_REQUEST,
-  REMOVE_FOLLOWER_REQUEST,
+  REMOVE_FOLLOWER_REQUEST
 } from "../reducers/user";
 import { LOAD_USER_POSTS_REQUEST } from "../reducers/post";
+
+import NickNameEditForm from "../components/NickNameEditForm";
 import PostCard from "../components/PostCard";
-import { useCallback } from "react";
+import FollowList from "../components/FollowList";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -19,7 +21,7 @@ const Profile = () => {
     followingList,
     followerList,
     hasMoreFollower,
-    hasMoreFollowing,
+    hasMoreFollowing
   } = useSelector((state) => state.user);
   const { mainPosts } = useSelector((state) => state.post);
 
@@ -27,7 +29,7 @@ const Profile = () => {
     (userId) => () => {
       dispatch({
         type: UNFOLLOW_USER_REQUEST,
-        data: userId,
+        data: userId
       });
     },
     []
@@ -37,7 +39,7 @@ const Profile = () => {
     (userId) => () => {
       dispatch({
         type: REMOVE_FOLLOWER_REQUEST,
-        data: userId,
+        data: userId
       });
     },
     []
@@ -46,71 +48,35 @@ const Profile = () => {
   const loadMoreFollowings = useCallback(() => {
     dispatch({
       type: LOAD_FOLLOWINGS_REQUEST,
-      offset: followingList.length,
+      offset: followingList.length
     });
   }, [followingList.length]);
 
   const loadMoreFollowers = useCallback(() => {
     dispatch({
       type: LOAD_FOLLOWERS_REQUEST,
-      offset: followerList.length,
+      offset: followerList.length
     });
   }, [followerList.length]);
 
   return (
     <div>
       <NickNameEditForm />
-      <List
-        style={{ marginBottom: 20 }}
-        grid={{ gutter: 4, xs: 2, md: 3 }}
-        size="small"
-        header={<div>팔로잉 목록</div>}
-        loadMore={
-          hasMoreFollowing && (
-            <Button style={{ width: "100%" }} onClick={loadMoreFollowings}>
-              더 보기
-            </Button>
-          )
-        }
-        dataSource={followingList}
-        renderItem={(item) => (
-          <List.Item style={{ marginTop: 20 }}>
-            <Card
-              actions={[
-                <Icon key="stop" type="stop" onClick={onUnFollow(item.id)} />,
-              ]}>
-              <Card.Meta description={item.nickname} />
-            </Card>
-          </List.Item>
-        )}
+      <FollowList
+        header={"팔로잉 목록"}
+        hasMore={hasMoreFollowing}
+        data={followingList}
+        onClickMore={loadMoreFollowings}
+        onClickStop={(userId) => {
+          onUnFollow(userId);
+        }}
       />
-      <List
-        style={{ marginBottom: 20 }}
-        grid={{ gutter: 4, xs: 2, md: 3 }}
-        size="small"
-        header={<div>팔로워 목록</div>}
-        loadMore={
-          hasMoreFollower && (
-            <Button style={{ width: "100%" }} onClick={loadMoreFollowers}>
-              더 보기
-            </Button>
-          )
-        }
-        dataSource={followerList}
-        renderItem={(item) => (
-          <List.Item style={{ marginTop: 20 }}>
-            <Card
-              actions={[
-                <Icon
-                  key="stop"
-                  type="stop"
-                  onClick={onRemoveFollower(item.id)}
-                />,
-              ]}>
-              <Card.Meta description={item.nickname} />
-            </Card>
-          </List.Item>
-        )}
+      <FollowList
+        header={"팔로워 목록"}
+        hasMore={hasMoreFollower}
+        data={followerList}
+        onClickMore={loadMoreFollowers}
+        onClickStop={onRemoveFollower}
       />
       <div>
         {mainPosts.map((value, index) => (
@@ -128,15 +94,15 @@ Profile.getInitialProps = async (context) => {
   // console.log(`Profile.getIniitalProps`, context);
   context.store.dispatch({
     type: LOAD_FOLLOWERS_REQUEST,
-    data: state.user.me && state.user.me.id,
+    data: state.user.me && state.user.me.id
   });
   context.store.dispatch({
     type: LOAD_FOLLOWINGS_REQUEST,
-    data: state.user.me && state.user.me.id,
+    data: state.user.me && state.user.me.id
   });
   context.store.dispatch({
     type: LOAD_USER_POSTS_REQUEST,
-    data: state.user.me && state.user.me.id,
+    data: state.user.me && state.user.me.id
   });
   // 이 쯤에서 LOAD_USER_SUCCESS가 돼서 me가 생김.
 };

@@ -18,7 +18,6 @@ const Home = () => {
      * document.documentElement.clientHeight : 화면 높이
      * document.documentElement.scrollHeight : 전체 화면 높이
      */
-
     if (
       window.scrollY + document.documentElement.clientHeight >
       document.documentElement.scrollHeight - 100
@@ -28,7 +27,7 @@ const Home = () => {
         if (!countRef.current.includes(lastId)) {
           dispatch({
             type: LOAD_MAIN_POSTS_REQUEST,
-            lastId,
+            lastId
           });
         }
         countRef.current.push(lastId);
@@ -95,6 +94,7 @@ const Home = () => {
 Home.getInitialProps = async (context) => {
   context.store.dispatch({
     type: LOAD_MAIN_POSTS_REQUEST,
+    lastId: 0
   });
 };
 

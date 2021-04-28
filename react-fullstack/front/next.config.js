@@ -1,4 +1,6 @@
-const withBundleAnalyzer = require("@zeit/next-bundle-analyzer");
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true"
+});
 const webpack = require("webpack");
 const CompressionPlugin = require("compression-webpack-plugin");
 
@@ -9,27 +11,27 @@ module.exports = withBundleAnalyzer({
   bundleAnalyzerConfig: {
     server: {
       analyzerMode: "static",
-      reportFilename: "../bundles/server.html",
+      reportFilename: "../bundles/server.html"
     },
     browser: {
       analyzerMode: "static",
-      reportFileName: "../bundles/client.html",
-    },
+      reportFileName: "../bundles/client.html"
+    }
   },
   webpack(config) {
-    console.log("config", config);
-    const prod = process.env.NODE_ENV;
+    console.log(`-------NODE_ENV: ${process.env.NODE_ENV}-------`);
+    const prod = process.env.NODE_ENV === "production";
     const plugins = [
       ...config.plugins,
-      new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /^\.\/ko$/),
+      new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /^\.\/ko$/)
     ];
     if (prod) {
       plugins.push(new CompressionPlugin());
     }
     return {
       ...config,
-      mode: prod === "production" ? "production" : "development",
-      devtool: prod === "production" ? "hidden-source-map" : "eval",
+      mode: prod ? "production" : "development",
+      devtool: prod ? "hidden-source-map" : "eval",
       module: {
         ...config.module,
         rules: [
@@ -37,13 +39,13 @@ module.exports = withBundleAnalyzer({
           {
             loader: "webpack-ant-icon-loader",
             enforce: "pre",
-            include: [require.resolve("@ant-design/icons/lib/dist")],
-          },
-        ],
+            include: [require.resolve("@ant-design/icons/lib/dist")]
+          }
+        ]
       },
-      plugins,
+      plugins
     };
-  },
+  }
 });
 
 /**

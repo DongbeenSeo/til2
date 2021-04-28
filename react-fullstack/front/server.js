@@ -8,6 +8,7 @@ const path = require("path");
 
 const dev = process.env.NODE_ENV !== "production";
 const prod = process.env.NODE_ENV === "production";
+const port = process.env.PORT;
 
 const app = next({ dev });
 const handle = app.getRequestHandler();
@@ -27,8 +28,8 @@ app.prepare().then(() => {
       secret: process.env.COOKIE_SECRET,
       cookie: {
         httpOnly: true,
-        secure: false,
-      },
+        secure: false
+      }
     })
   );
 
@@ -48,7 +49,7 @@ app.prepare().then(() => {
     return handle(req, res);
   });
 
-  server.listen(3060, () => {
-    console.log("next+express running on port 3060");
+  server.listen(3361, () => {
+    console.log(`next+express running on port ${3361}`);
   });
 });

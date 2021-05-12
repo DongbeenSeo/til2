@@ -1,14 +1,20 @@
 import React, { useCallback } from "react";
 import { Form, Input, Button } from "antd";
 import Link from "next/link";
-import { useInput } from "../pages/signup";
 import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
+import { useInput } from "../pages/signup";
 import { LOG_IN_REQUEST } from "../reducers/user";
+
+const LoginError = styled.div`
+  margin-top: 10px;
+  color: red;
+`;
 
 const LoginForm = () => {
   const [id, onChangeId] = useInput("");
   const [password, onChangePassword] = useInput("");
-  const { isLoggingIn } = useSelector((state) => state.user);
+  const { isLoggingIn, logInErrorReason } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const onSubmit = useCallback(
@@ -18,8 +24,8 @@ const LoginForm = () => {
         type: LOG_IN_REQUEST,
         data: {
           userId: id,
-          password,
-        },
+          password
+        }
       });
     },
     [id, password]
@@ -28,29 +34,43 @@ const LoginForm = () => {
     <div>
       <Form onSubmit={onSubmit} style={{ padding: 10 }}>
         <div>
-          <label htmlFor="user-id">아이디</label>
-          <br />
-          <Input name="user-id" required value={id} onChange={onChangeId} />
+          <label htmlFor="id">
+            아이디
+            <br />
+            <Input
+              id="id"
+              name="id"
+              required
+              value={id}
+              onChange={onChangeId}
+            />
+          </label>
         </div>
         <div>
-          <label htmlFor="password">비밀번호</label>
-          <br />
-          <Input
-            name="password"
-            type="password"
-            required
-            value={password}
-            onChange={onChangePassword}
-          />
+          <label htmlFor="password">
+            비밀번호
+            <br />
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              required
+              value={password}
+              onChange={onChangePassword}
+            />
+          </label>
         </div>
-        <div style={{ marginTop: 10 }}>
+        {logInErrorReason && (
+          <LoginError>
+            <span>{logInErrorReason.response.data}</span>
+          </LoginError>
+        )}
+        <div style={{ marginTop: "10px" }}>
           <Button type="primary" htmlType="submit" loading={isLoggingIn}>
             로그인
           </Button>
           <Link href="/signup">
-            <a>
-              <Button>회원가입</Button>
-            </a>
+            <Button>회원가입</Button>
           </Link>
         </div>
       </Form>

@@ -49,7 +49,7 @@ const initState = {
   logInErrorReason: "", // 로그인 실패 사유
   isSignedUp: false, // 회원가입 성공
   isSigningUp: false, // 회원가입 시도중
-  signUpErrorReason: "", //회원가입 실패 사유
+  signUpErrorReason: "", // 회원가입 실패 사유
   me: null, // 내정보
   followingList: [], // 팔로잉 리스트
   followerList: [], // 팔로워 리스트
@@ -58,7 +58,7 @@ const initState = {
   editNicknameErrorReason: "", // 이름 변경 실패 사유
   hasMoreFollower: false,
   hasMoreFollowing: false,
-  isloading: false,
+  isloading: false
 };
 
 // export const logoutAction = {
@@ -72,8 +72,9 @@ const initState = {
 //   };
 // };
 
-const reducer = (state = initState, action) => {
-  return produce(state, (draft) => {
+const reducer = (state = initState, action) =>
+  produce(state, (base) => {
+    const draft = base;
     switch (action.type) {
       case LOG_IN_REQUEST: {
         draft.isLoggingIn = true;
@@ -235,8 +236,8 @@ const reducer = (state = initState, action) => {
           ...state,
           me: {
             ...state.me,
-            Posts: [{ id: action.data }, ...state.me.Posts],
-          },
+            Posts: [{ id: action.data }, ...state.me.Posts]
+          }
         };
       }
       case REMOVE_POST_OF_ME: {
@@ -249,6 +250,5 @@ const reducer = (state = initState, action) => {
       }
     }
   });
-};
 
 export default reducer;

@@ -27,7 +27,7 @@ class NodeBird extends App {
     }
     if (!state.user.me) {
       ctx.store.dispatch({
-        type: LOAD_USER_REQUEST,
+        type: LOAD_USER_REQUEST
       });
     }
     if (Component.getInitialProps) {
@@ -36,6 +36,7 @@ class NodeBird extends App {
 
     return { pageProps };
   }
+
   render() {
     const { Component, store, pageProps } = this.props;
     return (
@@ -45,58 +46,58 @@ class NodeBird extends App {
           htmlAttributes={{ lang: "ko" }}
           meta={[
             {
-              charSet: "UTF-8",
+              charSet: "UTF-8"
             },
             {
               name: "viewport",
-              content: "width=device-width",
+              content: "width=device-width"
             },
             {
               httpEquiv: "X-UA-Compatible",
-              content: "IE=edge",
+              content: "IE=edge"
             },
             {
               name: "description",
-              content: "Nodebird SNS",
+              content: "Nodebird SNS"
             },
             {
               name: "og:title",
-              content: "My SNS",
+              content: "My SNS"
             },
             {
               name: "og:description",
-              content: "Nodebird SNS",
+              content: "Nodebird SNS"
             },
             {
               property: "og:type",
-              content: "website",
+              content: "website"
             },
+            {
+              property: "og:image",
+              content: "http://localhost:3361/favicon.ico"
+            }
           ]}
           link={[
             {
               rel: "stylesheet",
-              href:
-                "https://cdnjs.cloudflare.com/ajax/libs/antd/3.26.12/antd.css",
+              href: "https://cdnjs.cloudflare.com/ajax/libs/antd/3.26.12/antd.css"
             },
             {
               rel: "stylesheet",
               type: "text/css",
               charSet: "UTF-8",
-              href:
-                "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css",
+              href: "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
             },
             {
               rel: "stylesheet",
               type: "text/css",
-              href:
-                "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css",
-            },
+              href: "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
+            }
           ]}
           script={[
             {
-              src:
-                "https://cdnjs.cloudflare.com/ajax/libs/antd/3.26.12/antd.js",
-            },
+              src: "https://cdnjs.cloudflare.com/ajax/libs/antd/3.26.12/antd.js"
+            }
           ]}
         />
         <AppLayout>
@@ -113,7 +114,7 @@ const configureStore = (initState, options) => {
     sagaMiddleware,
     (store) => (next) => (action) => {
       next(action);
-    },
+    }
   ];
   // custom middleware (리덕스 사가의 로그를 나타내어 에러를 찾아낼수 있다.)
 

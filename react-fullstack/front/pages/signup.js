@@ -2,8 +2,13 @@ import React, { useState, useCallback, useEffect } from "react";
 import { Form, Input, Checkbox, Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import Router from "next/router";
+import styled from "styled-components";
 
 import { SIGN_UP_REQUEST } from "../reducers/user";
+
+const SignupError = styled.div`
+  color: red;
+`;
 
 export const useInput = (initValue = null) => {
   const [value, setter] = useState(initValue);
@@ -23,7 +28,7 @@ const signup = () => {
   const [termError, setTermError] = useState(false);
   const [passwordRequired, setPasswordRequired] = useState(false);
 
-  //custom hook
+  // custom hook
 
   const [id, onChangeId] = useInput("");
   const [nick, onChangeNickname] = useInput("");
@@ -43,17 +48,28 @@ const signup = () => {
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      //webpack에 console.log없애는 설정이 있음
-      if (!term) {
-        setTermError(true);
+      // webpack에 console.log없애는 설정이 있음
+      if (passwordError || password === "" || password !== passwordCheck) {
+        setPasswordError(true);
+      }
+      if (
+        passwordRequired ||
+        passwordCheck === "" ||
+        password !== passwordCheck
+      ) {
+        setPasswordRequired(true);
+      }
+      if (termError || !term) setTermError(true);
+      if (!passwordError && !passwordRequired && !termError) {
+        return false;
       }
       return dispatch({
         type: SIGN_UP_REQUEST,
         data: {
           userId: id,
           password,
-          nickname: nick,
-        },
+          nickname: nick
+        }
       });
     },
     [id, nick, password, passwordCheck, term]
@@ -77,6 +93,7 @@ const signup = () => {
       if (password === "") {
         setPasswordRequired(true);
       } else {
+        setPasswordRequired(false);
         setPasswordError(e.target.value !== password);
         setPasswordCheck(e.target.value);
       }
@@ -100,19 +117,14 @@ const signup = () => {
         <div>
           <label htmlFor="user-id">아이디</label>
           <br />
-          <Input
-            name="user-id"
-            required={true}
-            value={id}
-            onChange={onChangeId}
-          />
+          <Input name="user-id" required value={id} onChange={onChangeId} />
         </div>
         <div>
           <label htmlFor="nickname">닉네임</label>
           <br />
           <Input
             name="nickname"
-            required={true}
+            required
             value={nick}
             onChange={onChangeNickname}
           />
@@ -123,9 +135,12 @@ const signup = () => {
           <Input
             type="password"
             name="user-password"
-            required={true}
+            required
             value={password}
-            onChange={onChangePassword}
+            onChange={(e) => {
+              setPasswordRequired(false);
+              onChangePassword(e);
+            }}
           />
         </div>
         <div>
@@ -134,25 +149,25 @@ const signup = () => {
           <Input
             type="password"
             name="user-passwordCheck"
-            required={true}
+            required
             value={passwordCheck}
             onChange={onChangePasswordCheck}
           />
-        </div>{" "}
+        </div>
         {passwordError && (
-          <div style={{ color: "red" }}>비밀번호가 일치하지 않습니다.</div>
+          <SignupError>비밀번호가 일치하지 않습니다.</SignupError>
         )}
         {passwordRequired && (
-          <div style={{ color: "red" }}>비밀번호를 먼저 입력해주세요.</div>
+          <SignupError>비밀번호를 먼저 입력해주세요.</SignupError>
         )}
         <div>
           <Checkbox name="user-term" checked={term} onChange={onChangeTerm}>
             약관동의
           </Checkbox>
           {termError && (
-            <div style={{ marginTop: 10, color: "red" }}>
+            <SignupError style={{ marginTop: 10 }}>
               약관에 동의해주세요
-            </div>
+            </SignupError>
           )}
         </div>
         <div>

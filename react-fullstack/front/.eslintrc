@@ -15,6 +15,35 @@
   "extends": ["airbnb"],
   "plugins": ["import", "react-hooks"],
   "rules": {
-    "no-underscore-dangle": "off"
+    "no-underscore-dangle": "off",
+    "arrow-parens":"off",
+    "operator-linebreak":"off",
+    "indent":"off",
+    "comma-dangle":"off",
+    "jsx-quotes":"off",
+    "no-unused-vars":"off",
+    "implicit-arrow-linebreak":"off",
+    "function-paren-newline":"off",
+    "react/prop-types":"off",
+    "quotes":"off",
+    "jsx-a11y/label-has-associated-control":"off",
+    "jsx-a11y/label-has-for":"off",
+    "consistent-return":"off",
+    "no-unreachable":"off",
+    "object-curly-newline":"off",
+    "no-alert":"off",
+    "react/jsx-filename-extension": [
+      0,
+      {
+        "allow": "as-needed"
+      }
+    ],
+    "import/no-extraneous-dependencies": [
+      "off",
+      {
+        "packageDir": ["./some-dir/", "./root-pkg"
+        ]
+      }
+    ]
   }
 }
